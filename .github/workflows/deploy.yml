@@ -28,7 +28,8 @@ jobs:
 
       - name: build
         env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
+          # Root site (jordlind.github.io) is served from "/", so no base path.
+          BASE_PATH: ''
         run: |
           npm run build
 
