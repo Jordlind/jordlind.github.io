@@ -53,11 +53,11 @@
 	{/if}
 
 	{#if hasMultiple}
-		<!-- Prev / next arrows: revealed on hover -->
+		<!-- Prev / next arrows -->
 		<button
 			type="button"
 			aria-label="Previous image"
-			class="absolute top-1/2 left-2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roast/60 text-lg text-foam opacity-0 transition-opacity duration-200 group-hover/gallery:opacity-100 hover:bg-roast/80 focus:opacity-100"
+			class="absolute top-1/2 left-2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roast/60 text-lg text-foam transition-colors duration-200 hover:bg-roast/80 focus:outline-none"
 			onclick={(e) => go(e, -1)}
 		>
 			‹
@@ -65,7 +65,7 @@
 		<button
 			type="button"
 			aria-label="Next image"
-			class="absolute top-1/2 right-2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roast/60 text-lg text-foam opacity-0 transition-opacity duration-200 group-hover/gallery:opacity-100 hover:bg-roast/80 focus:opacity-100"
+			class="absolute top-1/2 right-2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-roast/60 text-lg text-foam transition-colors duration-200 hover:bg-roast/80 focus:outline-none"
 			onclick={(e) => go(e, 1)}
 		>
 			›
