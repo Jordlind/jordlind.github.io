@@ -1,19 +1,20 @@
 ---
-name: Midsummer Saison
+name: Summer Saison
 style: Saison / Farmhouse Ale
 abv: 6.2
 ibu: 28
 brewed: 2025-06-21
 images:
-  - midsommar-saison.svg
-  - midsommar-saison-2.svg
+  - summer-saison.svg
+  - summer-saison-2.svg
 tagline: A bright, peppery saison for long summer evenings.
 available: true
 order: 1
 ---
 
-A classic Belgian saison brewed for midsummer. Dry, lightly peppery and with a
-fruity yeast character. Perfect with seafood and late nights on the deck.
+A classic Belgian saison brewed for the summer.
+Dry, lightly peppery and with a fruity yeast character.
+Perfect with seafood and late nights on the deck.
 
 ## Recipe (20 litres)
 

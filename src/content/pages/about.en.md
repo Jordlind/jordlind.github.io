@@ -2,11 +2,21 @@
 title: About Jordlind
 ---
 
-## Two generations, one brew kettle
+## Two families, one name
 
-Jordlind started at a kitchen table, with a father-in-law, a son-in-law, and a
-shared curiosity about what actually happens inside a brew kettle. What was meant
-to be a one-off experiment quickly became a recurring weekend pursuit.
+Jordlind is **Alexander Jordan** and **Dan Lindgren** — a son-in-law and a
+father-in-law with a shared love of beer. The name comes from our surnames:
+**Jord**an and **Lind**gren, woven together into one.
+
+But the name means more to us than that. **Jord** (earth) stands for being
+down-to-earth: recipes that are genuinely good, built on the fundamentals —
+honest ingredients and honest craft. No factory, no corporation. Just family.
+
+**Lind** is the linden tree. To us it symbolises comfort, stability and the
+quiet calm you find in the company of people you love. That's the feeling we
+want to brew into every batch.
+
+## How we brew
 
 We brew in small batches, usually just a few dozen litres at a time. That lets us
 be picky about every step — from mashing to fermentation — and try new things

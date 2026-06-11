@@ -1,19 +1,20 @@
 ---
-name: Midsommarsaison
+name: Sommarsaison
 style: Saison / Farmhouse Ale
 abv: 6.2
 ibu: 28
 brewed: 2025-06-21
 images:
-  - midsommar-saison.svg
-  - midsommar-saison-2.svg
+  - summer-saison.svg
+  - summer-saison-2.svg
 tagline: En ljus, pepprig saison för långa sommarkvällar.
 available: true
 order: 1
 ---
 
-En klassisk belgisk saison bryggd till midsommar. Torr, lätt pepprig och med en
-fruktig jästkaraktär. Perfekt till skaldjur och sena kvällar på altanen.
+En klassisk belgisk saison bryggd till sommar.
+Torr, lätt pepprig och med en fruktig jästkaraktär.
+Perfekt till skaldjur och sena kvällar på altanen.
 
 ## Recept (20 liter)
 

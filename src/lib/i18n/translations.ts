@@ -13,9 +13,9 @@ export const translations: Record<Locale, Dict> = {
 		'nav.brand': 'Jordlind',
 		'nav.tagline': 'Hantverksbryggeri',
 
-		'home.heroTitle': 'Öl bryggt med jord och tålamod',
+		'home.heroTitle': 'Jordnära öl, bryggt med tålamod',
 		'home.heroText':
-			'Jordlind är ett litet hemmabryggeri drivet av en svärfar och hans svärson. Vi brygger öl vi själva vill dricka – ärligt, smakrikt och gjort i små satser.',
+			'Jordlind är ett litet familjebryggeri – en svärson och en svärfar som brygger öl vi själva vill dricka. Ärligt, smakrikt och gjort i små satser, med fötterna stadigt i jorden.',
 		'home.cta': 'Se våra öl',
 		'home.latestTitle': 'Senaste bryggderna',
 		'home.latestText': 'Ett urval av det vi har på lager just nu.',
@@ -48,9 +48,9 @@ export const translations: Record<Locale, Dict> = {
 		'nav.brand': 'Jordlind',
 		'nav.tagline': 'Craft Brewery',
 
-		'home.heroTitle': 'Beer brewed with earth and patience',
+		'home.heroTitle': 'Down-to-earth beer, brewed with patience',
 		'home.heroText':
-			'Jordlind is a small home brewery run by a father-in-law and his son-in-law. We brew the beer we want to drink — honest, flavourful, and made in small batches.',
+			'Jordlind is a small family brewery — a son-in-law and a father-in-law brewing the beer we want to drink. Honest, flavourful, made in small batches, with our feet firmly on the ground.',
 		'home.cta': 'Browse our beers',
 		'home.latestTitle': 'Latest brews',
 		'home.latestText': 'A selection of what we have on hand right now.',
