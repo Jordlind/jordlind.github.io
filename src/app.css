@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+
+/* Warm, rustic craft-brewery theme */
+@theme {
+	--color-cream: #f7f1e3;
+	--color-malt: #efe3cf;
+	--color-amber-deep: #b5651d;
+	--color-amber: #cd853f;
+	--color-foam: #fffaf0;
+	--color-roast: #2b2118;
+	--color-roast-soft: #4a3b2c;
+	--color-hop: #6b8e23;
+
+	--font-display: 'Georgia', 'Times New Roman', serif;
+	--font-body: 'Inter', system-ui, sans-serif;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	background-color: var(--color-cream);
+	color: var(--color-roast);
+	font-family: var(--font-body);
+}
+
+/* Rendered markdown recipe content */
+.recipe {
+	line-height: 1.7;
+}
+.recipe h2 {
+	font-family: var(--font-display);
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--color-amber-deep);
+	margin-top: 2rem;
+	margin-bottom: 0.75rem;
+	border-bottom: 2px solid var(--color-malt);
+	padding-bottom: 0.35rem;
+}
+.recipe h3 {
+	font-family: var(--font-display);
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: var(--color-roast-soft);
+	margin-top: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+.recipe p {
+	margin-bottom: 1rem;
+}
+.recipe ul {
+	list-style: disc;
+	padding-left: 1.5rem;
+	margin-bottom: 1rem;
+}
+.recipe ol {
+	list-style: decimal;
+	padding-left: 1.5rem;
+	margin-bottom: 1rem;
+}
+.recipe li {
+	margin-bottom: 0.35rem;
+}
+.recipe table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1.5rem;
+}
+.recipe th,
+.recipe td {
+	border: 1px solid var(--color-malt);
+	padding: 0.5rem 0.75rem;
+	text-align: left;
+}
+.recipe th {
+	background-color: var(--color-malt);
+	font-weight: 600;
+}
+.recipe a {
+	color: var(--color-amber-deep);
+	text-decoration: underline;
+}
+.recipe blockquote {
+	border-left: 4px solid var(--color-amber);
+	padding-left: 1rem;
+	font-style: italic;
+	color: var(--color-roast-soft);
+	margin-bottom: 1rem;
+}
+.recipe code {
+	background-color: var(--color-malt);
+	padding: 0.1rem 0.35rem;
+	border-radius: 0.25rem;
+	font-size: 0.9em;
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color="#fbe9bf" />
+			<stop offset="100%" stop-color="#e9c878" />
+		</linearGradient>
+		<linearGradient id="bottle" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color="#9c6b1f" />
+			<stop offset="100%" stop-color="#6e4912" />
+		</linearGradient>
+	</defs>
+	<rect width="400" height="500" fill="url(#bg)" />
+	<!-- bottle -->
+	<rect x="178" y="90" width="44" height="60" rx="8" fill="url(#bottle)" />
+	<path d="M172 150 q-14 16 -14 50 v200 a14 14 0 0 0 14 14 h56 a14 14 0 0 0 14 -14 v-200 q0 -34 -14 -50 z" fill="url(#bottle)" />
+	<!-- cap -->
+	<rect x="176" y="78" width="48" height="16" rx="4" fill="#3a2a12" />
+	<!-- label -->
+	<rect x="166" y="240" width="68" height="90" rx="6" fill="#fffaf0" opacity="0.95" />
+	<text x="200" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#8a5a14" font-weight="bold">Jord-</text>
+	<text x="200" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#8a5a14" font-weight="bold">lind</text>
+	<text x="200" y="460" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#7a4f12" font-weight="bold">Saison · Flaska</text>
+</svg>
