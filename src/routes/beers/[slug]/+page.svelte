@@ -2,6 +2,7 @@
 	import { base } from '$app/paths';
 	import { locale, t } from '$lib/i18n';
 	import { localizedContent, isFallback } from '$lib/content/beers';
+	import { ebcColor } from '$lib/beerColor';
 	import BeerGallery from '$lib/components/BeerGallery.svelte';
 	import type { PageData } from './$types';
 
@@ -64,44 +65,58 @@
 				{/if}
 
 				<dl class="mt-6 grid grid-cols-2 gap-4 rounded-2xl bg-malt/50 p-5">
-					{#if content.style}
-						<div>
-							<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.style')}</dt>
-							<dd class="font-semibold text-roast">{content.style}</dd>
-						</div>
-					{/if}
-					{#if content.abv != null}
-						<div>
-							<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.abv')}</dt>
-							<dd class="font-semibold text-roast">{content.abv}%</dd>
-						</div>
-					{/if}
-					{#if content.ibu != null}
-						<div>
-							<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.ibu')}</dt>
-							<dd class="font-semibold text-roast">{content.ibu}</dd>
-						</div>
-					{/if}
-					{#if content.brewed}
-						<div>
-							<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.brewed')}</dt>
-							<dd class="font-semibold text-roast">{formatDate(content.brewed, $locale)}</dd>
-						</div>
-					{/if}
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.style')}</dt>
+						<dd class="font-semibold text-roast">{content.style ?? '-'}</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.abv')}</dt>
+						<dd class="font-semibold text-roast">{content.abv ?? '-'}%</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.ibu')}</dt>
+						<dd class="font-semibold text-roast">{content.ibu ?? '-'}</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.ebc')}</dt>
+						<dd class="flex items-center gap-2 font-semibold text-roast">
+							{#if content.ebc != null}
+								<span
+									class="inline-block size-4 shrink-0 rounded-full border border-roast/20"
+									style="background-color: {ebcColor(content.ebc)}"
+									aria-hidden="true"
+								></span>
+								{content.ebc}
+							{:else}
+								-
+							{/if}
+						</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.og')}</dt>
+						<dd class="font-semibold text-roast">{content.og ?? '-'}</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.fg')}</dt>
+						<dd class="font-semibold text-roast">{content.fg ?? '-'}</dd>
+					</div>
+					<div>
+						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.brewed')}</dt>
+						<dd class="font-semibold text-roast">{content.brewed ? formatDate(content.brewed, $locale) : '-'}</dd>
+					</div>
 				</dl>
 			</div>
 		</div>
 
 		<!-- Recipe -->
 		<div class="mt-12">
-			<h2 class="font-display text-3xl font-bold text-amber-deep">{$t('beer.recipe')}</h2>
 			{#if fallback}
-				<p class="mt-2 rounded-lg bg-amber/15 px-4 py-2 text-sm text-roast-soft">
+				<p class="mb-4 rounded-lg bg-amber/15 px-4 py-2 text-sm text-roast-soft">
 					{$t('beer.noTranslation')}
 				</p>
 			{/if}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="recipe mt-4 max-w-3xl">{@html content.recipeHtml}</div>
+			<div class="recipe max-w-3xl">{@html content.recipeHtml}</div>
 		</div>
 	</article>
 {/if}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+	<defs>
+		<linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color="#f7e3b4" />
+			<stop offset="100%" stop-color="#dca85e" />
+		</linearGradient>
+		<linearGradient id="beer3" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0%" stop-color="#d4801c" />
+			<stop offset="100%" stop-color="#9e500c" />
+		</linearGradient>
+	</defs>
+	<rect width="400" height="500" fill="url(#bg3)" />
+	<!-- glass -->
+	<path d="M150 120 h100 l-12 250 a38 38 0 0 1 -76 0 z" fill="#ffffff" opacity="0.25" />
+	<path d="M156 150 h88 l-11 220 a33 33 0 0 1 -66 0 z" fill="url(#beer3)" />
+	<!-- foam (cream head) -->
+	<ellipse cx="200" cy="150" rx="44" ry="18" fill="#f6e8cf" />
+	<ellipse cx="178" cy="142" rx="16" ry="13" fill="#fbf2e0" />
+	<ellipse cx="218" cy="140" rx="18" ry="15" fill="#fbf2e0" />
+	<!-- bubbles -->
+	<circle cx="190" cy="240" r="4" fill="#fbf2e0" opacity="0.6" />
+	<circle cx="210" cy="290" r="3" fill="#fbf2e0" opacity="0.6" />
+	<circle cx="195" cy="320" r="3.5" fill="#fbf2e0" opacity="0.6" />
+</svg>

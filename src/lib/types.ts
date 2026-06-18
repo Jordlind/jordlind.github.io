@@ -7,6 +7,9 @@ export interface BeerMeta {
 	style: string;
 	abv: number | null;
 	ibu: number | null;
+	ebc: number | null;
+	og: number | null;
+	fg: number | null;
 	brewed: string | null;
 	images: string[];
 	tagline: string;

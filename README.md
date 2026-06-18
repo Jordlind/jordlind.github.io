@@ -28,30 +28,43 @@ to `main`; the site rebuilds and redeploys automatically.
 
 Each beer is two Markdown files (one per language) in `src/content/beers/`,
 named `<slug>.sv.md` and `<slug>.en.md`. The part before `.sv`/`.en` becomes the
-page URL (e.g. `summer-saison` → `/beers/summer-saison`).
+page URL (e.g. `belgisk-tripel` → `/beers/belgisk-tripel`).
 
 ```markdown
 ---
-name: Summer Saison
-style: Saison / Farmhouse Ale
-abv: 6.2
-ibu: 28
-brewed: 2025-06-21
+name: Belgian Tripel
+style: Belgian Tripel
+abv: 9.1
+ibu: 30
+ebc: 11.4
+og: 1080
+fg: 1013
+brewed: 2026-06-14
 images:
-  - summer-saison.svg
-  - summer-saison-2.svg
-tagline: A bright, peppery saison for long summer evenings.
+  - light-beer.svg
+  - amber-beer.svg
+tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
 available: true
 order: 1
 ---
 
-## Recipe
+# Recipe (23 litres)
 
-...the recipe in Markdown (tables, lists, headings all work)...
+A short intro paragraph about the beer.
+
+## Malt
+
+...the rest of the recipe in Markdown (tables, lists, headings all work)...
 ```
 
+- The body should start with a single `#` heading — it becomes the page's recipe
+  title. Use `##` for the sections below it (Malt, Hops, …).
+- `abv`, `ibu`, `ebc`, `og` and `fg` are optional. When present they appear in the
+  stats grid; `ebc` also renders a small colour swatch. Missing ones show `-`.
 - Use `images:` for a list of photos (a left/right carousel appears automatically
-  when there's more than one). A single `image:` value also works.
+  when there's more than one). A single `image:` value also works. Placeholder
+  art is available: `light-beer.svg`, `amber-beer.svg`, `dark-beer.svg` and
+  `beer-bottle.svg`.
 - Put image files in `static/beers/` and reference them by filename.
 - `available: false` shows a "Sold out" badge.
 - `order:` controls sort order (lower comes first).

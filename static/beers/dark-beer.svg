@@ -20,5 +20,4 @@
 	<!-- bubbles -->
 	<circle cx="190" cy="250" r="4" fill="#d8b487" opacity="0.5" />
 	<circle cx="210" cy="300" r="3" fill="#d8b487" opacity="0.5" />
-	<text x="200" y="450" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#cd853f" font-weight="bold">Porter</text>
 </svg>
