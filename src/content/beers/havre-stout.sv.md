@@ -1,15 +1,7 @@
 ---
 name: Havre Stout
 style: Havrestout
-abv: 4.6
-ibu: 30.3
-ebc: 43.9
-og: 1049
-fg: 1014
-image: havre-stout.jpg
 tagline: Len struktur och fylliga rostade chokladsmaker – ett tröstande vinteröl.
-available: false
-order: 2
 ---
 
 # Recept (23 liter)

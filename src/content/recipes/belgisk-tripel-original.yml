@@ -1,0 +1,31 @@
+batchVolumeL: 23
+mashWaterL: 16.3
+preBoilVolumeL: 27
+og: 1080
+fg: 1013
+hops:
+  - name: Saaz
+    grams: 50
+    alphaAcidPercent: 4.2
+    boilMinutes: 60
+    expectedIbu: 18.6
+  - name: Styrian Goldings
+    grams: 50
+    alphaAcidPercent: 5.5
+    boilMinutes: 15
+    expectedIbu: 11.7
+malts:
+  - name: Belgian Pilsner Malt
+    weightKg: 6.3
+    colorEbc: 3.5
+    expectedSharePercent: 96
+  - name: Caramunich I
+    weightKg: 0.25
+    colorEbc: 90
+    expectedSharePercent: 4
+meta:
+  brewed: 2026-06-14
+  images:
+    - amber-beer.svg
+  available: false
+  order: 4

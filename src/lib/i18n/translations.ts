@@ -40,6 +40,7 @@ export const translations: Record<Locale, Dict> = {
 		'beer.available': 'Tillgänglig',
 		'beer.soldOut': 'Slut',
 		'beer.noTranslation': 'Det här innehållet finns ännu inte på svenska.',
+		'beer.openInCalculator': 'Öppna i kalkylatorn',
 
 		'about.title': 'Om Jordlind',
 
@@ -111,6 +112,8 @@ export const translations: Record<Locale, Dict> = {
 		'calc.icon.remove': 'Ta bort rad',
 		'calc.note':
 			'Värdena är uppskattningar men ger ett stabilt underlag för receptjustering.',
+		'calc.prefilledFromBeer': 'Förifylld från recept',
+		'calc.prefillMissing': 'Kunde inte hitta receptdata för den valda ölen.',
 
 		'footer.rights': 'Bryggt med kärlek. Drick ansvarsfullt.'
 	},
@@ -148,6 +151,7 @@ export const translations: Record<Locale, Dict> = {
 		'beer.available': 'Available',
 		'beer.soldOut': 'Sold out',
 		'beer.noTranslation': 'This content is not available in English yet.',
+		'beer.openInCalculator': 'Open in calculator',
 
 		'about.title': 'About Jordlind',
 
@@ -219,6 +223,8 @@ export const translations: Record<Locale, Dict> = {
 		'calc.icon.remove': 'Remove row',
 		'calc.note':
 			'These values are estimates, but they provide a solid baseline for recipe tuning.',
+		'calc.prefilledFromBeer': 'Prefilled from recipe',
+		'calc.prefillMissing': 'Could not find recipe data for the selected beer.',
 
 		'footer.rights': 'Brewed with love. Please drink responsibly.'
 	}

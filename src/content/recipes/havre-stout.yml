@@ -1,0 +1,45 @@
+batchVolumeL: 23
+mashWaterL: 12.2
+preBoilVolumeL: 27
+og: 1049
+fg: 1014
+hops:
+  - name: Challenger
+    grams: 39
+    alphaAcidPercent: 7.0
+    boilMinutes: 70
+    expectedIbu: 30.3
+  - name: Challenger
+    grams: 16
+    alphaAcidPercent: 7.0
+    boilMinutes: 0
+  - name: Golding
+    grams: 16
+    alphaAcidPercent: 5.5
+    boilMinutes: 0
+malts:
+  - name: Pale Ale Malt
+    weightKg: 4.2
+    colorEbc: 7
+    expectedSharePercent: 87
+  - name: Rolled Oats
+    weightKg: 0.25
+    colorEbc: 2
+    expectedSharePercent: 5
+  - name: Caramel Malt
+    weightKg: 0.2
+    colorEbc: 160
+    expectedSharePercent: 4
+  - name: Chocolate Malt
+    weightKg: 0.16
+    colorEbc: 900
+    expectedSharePercent: 3
+  - name: Roasted Barley
+    weightKg: 0.07
+    colorEbc: 1200
+    expectedSharePercent: 1
+meta:
+  images:
+    - havre-stout.jpg
+  available: false
+  order: 2

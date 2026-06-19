@@ -1,15 +1,7 @@
 ---
 name: Oat Stout
 style: Oat Stout
-abv: 4.6
-ibu: 30.3
-ebc: 43.9
-og: 1049
-fg: 1014
-image: havre-stout.jpg
 tagline: Silky smooth with rich roasted chocolate notes — a comforting winter beer.
-available: false
-order: 2
 ---
 
 # Recipe (23 litres)

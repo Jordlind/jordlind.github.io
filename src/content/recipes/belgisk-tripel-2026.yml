@@ -1,0 +1,31 @@
+batchVolumeL: 23
+mashWaterL: 20
+preBoilVolumeL: 25
+og: 1080
+fg: 1013
+hops:
+  - name: Saaz
+    grams: 50
+    alphaAcidPercent: 3.9
+    boilMinutes: 60
+    expectedIbu: 19.1
+  - name: Tettnanger
+    grams: 50
+    alphaAcidPercent: 4.0
+    boilMinutes: 15
+    expectedIbu: 7.3
+malts:
+  - name: Pilsnermalt
+    weightKg: 6
+    colorEbc: 3.5
+    expectedSharePercent: 96
+  - name: Caramunch I
+    weightKg: 0.5
+    colorEbc: 90
+    expectedSharePercent: 4
+meta:
+  brewed: 2026-06-14
+  images:
+    - amber-beer.svg
+  available: true
+  order: 1

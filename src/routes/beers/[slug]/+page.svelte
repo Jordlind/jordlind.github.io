@@ -67,6 +67,13 @@
 					<p class="mt-3 text-lg text-roast-soft italic">{content.tagline}</p>
 				{/if}
 
+				<a
+					href="{base}/calculator?beer={data.beer.slug}"
+					class="mt-4 inline-flex w-fit items-center rounded-full border border-amber-deep px-4 py-2 text-sm font-semibold text-amber-deep transition hover:bg-amber-deep hover:text-foam"
+				>
+					{$t('beer.openInCalculator')}
+				</a>
+
 				<dl class="mt-6 grid grid-cols-2 gap-4 rounded-2xl bg-malt/50 p-5">
 					<div>
 						<dt class="text-xs tracking-wide text-roast-soft uppercase">{$t('beer.style')}</dt>

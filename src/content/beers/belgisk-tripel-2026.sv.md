@@ -1,17 +1,7 @@
 ---
 name: Belgisk Tripel 2026
 style: Belgisk Tripel
-abv: 8.7
-ibu: 26.4
-ebc: 15.8
-og: 1080
-fg: 1013
-brewed: 2026-06-14
-images:
-  - amber-beer.svg
 tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
-available: true
-order: 1
 ---
 
 # Recept (23 liter)

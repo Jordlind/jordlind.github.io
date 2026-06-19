@@ -1,0 +1,37 @@
+batchVolumeL: 23
+mashWaterL: 16.3
+preBoilVolumeL: 27
+og: 1068
+fg: 1009
+hops:
+  - name: Saaz
+    grams: 65
+    alphaAcidPercent: 3.9
+    boilMinutes: 60
+    expectedIbu: 29.2
+  - name: Kent Golding
+    grams: 20
+    alphaAcidPercent: 5.7
+    boilMinutes: 15
+    expectedIbu: 6.5
+malts:
+  - name: Pale Ale
+    weightKg: 6
+    colorEbc: 6.5
+    expectedSharePercent: 96
+  - name: Chocolate Malt Crisp
+    weightKg: 0.25
+    colorEbc: 550
+    expectedSharePercent: 4
+  - name: Caramunch I
+    weightKg: 0.25
+    colorEbc: 90
+    expectedSharePercent: 4
+meta:
+  brewed: 2025-01-17
+  images:
+    - belgisk-tripel-2025-1.jpg
+    - belgisk-tripel-2025-2.jpg
+    - belgisk-tripel-2025-3.jpg
+  available: false
+  order: 3

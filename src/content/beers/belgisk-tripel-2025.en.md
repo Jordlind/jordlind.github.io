@@ -1,19 +1,7 @@
 ---
 name: Belgisk Tripel 2025
 style: Belgisk Tripel
-abv: 7.7
-ibu: 36.2
-ebc: 33.7
-og: 1068
-fg: 1009
-brewed: 2025-01-17
-images:
-  - belgisk-tripel-2025-1.jpg
-  - belgisk-tripel-2025-2.jpg
-  - belgisk-tripel-2025-3.jpg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
-available: false
-order: 3
 ---
 
 # Recipe (23 litres)

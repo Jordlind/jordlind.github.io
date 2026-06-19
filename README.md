@@ -26,26 +26,20 @@ to `main`; the site rebuilds and redeploys automatically.
 
 ### Add or edit a beer
 
-Each beer is two Markdown files (one per language) in `src/content/beers/`,
-named `<slug>.sv.md` and `<slug>.en.md`. The part before `.sv`/`.en` becomes the
-page URL (e.g. `belgisk-tripel` → `/beers/belgisk-tripel`).
+Each beer uses three files with the same slug:
+
+- `src/content/recipes/<slug>.yml` for canonical brewing data
+- `src/content/beers/<slug>.en.md` for English text
+- `src/content/beers/<slug>.sv.md` for Swedish text
+
+The part before `.sv`/`.en` becomes the page URL (e.g. `belgisk-tripel` →
+`/beers/belgisk-tripel`).
 
 ```markdown
 ---
 name: Belgian Tripel
 style: Belgian Tripel
-abv: 9.1
-ibu: 30
-ebc: 11.4
-og: 1080
-fg: 1013
-brewed: 2026-06-14
-images:
-  - light-beer.svg
-  - amber-beer.svg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
-available: true
-order: 1
 ---
 
 # Recipe (23 litres)
@@ -57,10 +51,42 @@ A short intro paragraph about the beer.
 ...the rest of the recipe in Markdown (tables, lists, headings all work)...
 ```
 
+Canonical recipe example (`src/content/recipes/belgian-tripel.yml`):
+
+```yaml
+batchVolumeL: 23
+mashWaterL: 16.3
+preBoilVolumeL: 27
+og: 1080
+fg: 1013
+hops:
+  - name: Saaz
+    grams: 65
+    alphaAcidPercent: 3.9
+    boilMinutes: 60
+    expectedIbu: 29.2
+malts:
+  - name: Pilsner malt
+    weightKg: 5.5
+    colorEbc: 4
+    expectedSharePercent: 96
+meta:
+  brewed: 2026-06-14
+  images:
+    - light-beer.svg
+  available: true
+  order: 1
+```
+
+When a canonical recipe file exists, ABV/IBU/EBC/OG/FG are automatically computed
+from it and shared by both language pages.
+
 - The body should start with a single `#` heading — it becomes the page's recipe
   title. Use `##` for the sections below it (Malt, Hops, …).
-- `abv`, `ibu`, `ebc`, `og` and `fg` are optional. When present they appear in the
-  stats grid; `ebc` also renders a small colour swatch. Missing ones show `-`.
+- Numeric brew fields (`abv`, `ibu`, `ebc`, `og`, `fg`) are computed from canonical
+  recipe data and should not be added to markdown frontmatter.
+- Shared metadata (`brewed`, `images`/`image`, `available`, `order`) also belongs in
+  canonical recipe YAML (`meta:`), not per-language markdown.
 - Use `images:` for a list of photos (a left/right carousel appears automatically
   when there's more than one). A single `image:` value also works. Placeholder
   art is available: `light-beer.svg`, `amber-beer.svg`, `dark-beer.svg` and
@@ -82,6 +108,7 @@ Lives in `src/lib/i18n/translations.ts`.
 ```bash
 npm install
 npm run dev          # start the dev server
+npm run recipes:check # validate recipe structure and locale pairing
 npm run build        # production build (what GitHub Pages runs)
 npm run preview      # preview the production build
 ```

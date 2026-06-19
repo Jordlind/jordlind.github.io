@@ -1,17 +1,7 @@
 ---
 name: Belgian Tripel 2026
 style: Belgian Tripel
-abv: 8.7
-ibu: 26.4
-ebc: 15.8
-og: 1080
-fg: 1013
-brewed: 2026-06-14
-images:
-  - amber-beer.svg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
-available: true
-order: 1
 ---
 
 # Recipe (23 litres)

@@ -1,19 +1,7 @@
 ---
 name: Belgisk Tripel 2025
 style: Belgisk Tripel
-abv: 7.7
-ibu: 30.4
-ebc: 33.7
-og: 1068
-fg: 1009
-brewed: 2025-01-17
-images:
-  - belgisk-tripel-2025-1.jpg
-  - belgisk-tripel-2025-2.jpg
-  - belgisk-tripel-2025-3.jpg
 tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
-available: false
-order: 3
 ---
 
 # Recept (23 liter)

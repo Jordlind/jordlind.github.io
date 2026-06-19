@@ -17,27 +17,63 @@
 	import ColorTool from '$lib/components/calculator/ColorTool.svelte';
 	import PrimingTool from '$lib/components/calculator/PrimingTool.svelte';
 	import ResultsPanel from '$lib/components/calculator/ResultsPanel.svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	type ToolId = 'ibu' | 'abv' | 'color' | 'priming';
 
+	const prefillRecipe = data.prefill?.recipeData ?? null;
+
+	function gravityToSg(value: number): number {
+		if (value >= 1000) return value / 1000;
+		return value;
+	}
+
+	const initialBatchVolumeL = prefillRecipe?.water.batchVolumeL ?? 20;
+	const initialIbuGravity = prefillRecipe ? gravityToSg(prefillRecipe.og) : 1.05;
+	const initialAbvOg = prefillRecipe ? gravityToSg(prefillRecipe.og) : 1.058;
+	const initialAbvFg = prefillRecipe ? gravityToSg(prefillRecipe.fg) : 1.012;
+
+	const initialAdditions =
+		prefillRecipe?.hops.map((hop, index) => ({
+			id: index + 1,
+			grams: hop.grams,
+			alphaAcidPercent: hop.alphaAcidPercent,
+			boilMinutes: hop.boilMinutes
+		})) ?? [{ id: 1, grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }];
+
+	const prefilledMalts =
+		prefillRecipe?.malts
+			.filter((malt) => malt.colorEbc != null)
+			.map((malt, index) => ({
+				id: index + 1,
+				name: malt.name,
+				weightKg: malt.weightKg,
+				colorEbc: malt.colorEbc ?? 0
+			})) ?? [];
+
+	const initialMalts =
+		prefilledMalts.length > 0
+			? prefilledMalts
+			: [
+					{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
+					{ id: 2, name: 'Munchnermalt', weightKg: 0.7, colorEbc: 18 }
+				];
+
 	let activeTool = $state<ToolId>('ibu');
 
-	let batchVolumeL = $state(20);
-	let ibuGravity = $state(1.05);
+	let batchVolumeL = $state(initialBatchVolumeL);
+	let ibuGravity = $state(initialIbuGravity);
 	let ibuUseOg = $state(true);
-	let abvOg = $state(1.058);
-	let abvFg = $state(1.012);
+	let abvOg = $state(initialAbvOg);
+	let abvFg = $state(initialAbvFg);
 	let primingTempC = $state(20);
 	let targetCo2Vol = $state(2.4);
 	let sugarType = $state<PrimingSugarType>('dextrose');
 
-	let additions = $state<HopAddition[]>([
-		{ id: 1, grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }
-	]);
-	let malts = $state<MaltAddition[]>([
-		{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
-		{ id: 2, name: 'Munchnermalt', weightKg: 0.7, colorEbc: 18 }
-	]);
+	let additions = $state<HopAddition[]>(initialAdditions);
+	let malts = $state<MaltAddition[]>(initialMalts);
 
 	const tools = $derived([
 		{ id: 'ibu' as const, label: $t('calc.tool.ibu') },
@@ -87,6 +123,15 @@
 			<p class="text-xs tracking-[0.2em] text-cream/70 uppercase">Jordlind Lab</p>
 			<h1 class="mt-2 font-display text-4xl font-bold text-cream">{$t('calc.title')}</h1>
 			<p class="mt-3 max-w-2xl text-cream/80">{$t('calc.subtitle')}</p>
+			{#if data.prefill}
+				<p class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber/50 bg-amber/20 px-4 py-1 text-sm text-cream">
+					{$t('calc.prefilledFromBeer')}: {data.prefill.name}
+				</p>
+			{:else if data.requestedSlug}
+				<p class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber/30 bg-amber/10 px-4 py-1 text-sm text-cream/90">
+					{$t('calc.prefillMissing')}
+				</p>
+			{/if}
 		</div>
 	</div>
 
