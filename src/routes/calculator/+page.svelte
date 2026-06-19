@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
 	import {
 		abvFromOgFg,
 		apparentAttenuation,
@@ -20,7 +22,8 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-	const selectedRecipeSlug = $derived(data.requestedSlug ?? '');
+	const selectedRecipeSlug = $derived(browser ? page.url.searchParams.get('beer')?.trim() ?? '' : '');
+	const selectedRecipe = $derived(data.recipes.find((recipe) => recipe.slug === selectedRecipeSlug) ?? null);
 
 	type ToolId = 'ibu' | 'abv' | 'color' | 'priming';
 
@@ -49,7 +52,7 @@
 	]);
 
 	$effect(() => {
-		const recipe = data.prefill?.recipeData ?? null;
+		const recipe = selectedRecipe?.recipeData ?? null;
 		if (!recipe) return;
 
 		batchVolumeL = recipe.water.batchVolumeL;
@@ -145,11 +148,11 @@
 				</button>
 			</form>
 
-			{#if data.prefill}
+			{#if selectedRecipe}
 				<p class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber/50 bg-amber/20 px-4 py-1 text-sm text-cream">
-					{$t('calc.prefilledFromBeer')}: {data.prefill.name}
+					{$t('calc.prefilledFromBeer')}: {selectedRecipe.name}
 				</p>
-			{:else if data.requestedSlug}
+			{:else if selectedRecipeSlug}
 				<p class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber/30 bg-amber/10 px-4 py-1 text-sm text-cream/90">
 					{$t('calc.prefillMissing')}
 				</p>
