@@ -11,10 +11,12 @@
 	const content = $derived(localizedContent(data.beer, $locale));
 	const fallback = $derived(isFallback(data.beer, $locale));
 
-	function formatDate(value: string | null, loc: string): string {
+	const formatDate = (value: string | null, loc: string): string => {
 		if (!value) return '';
+
 		const date = new Date(value);
 		if (Number.isNaN(date.getTime())) return value;
+
 		return date.toLocaleDateString(loc === 'sv' ? 'sv-SE' : 'en-GB', {
 			year: 'numeric',
 			month: 'long',
@@ -25,6 +27,7 @@
 
 <svelte:head>
 	<title>{content?.name ?? 'Beer'} · Jordlind</title>
+
 	{#if content?.tagline}
 		<meta name="description" content={content.tagline} />
 	{/if}

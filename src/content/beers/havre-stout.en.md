@@ -9,7 +9,7 @@ fg: 1014
 image: havre-stout.jpg
 tagline: Silky smooth with rich roasted chocolate notes — a comforting winter beer.
 available: true
-order: 4
+order: 2
 ---
 
 # Recipe (23 litres)
@@ -51,5 +51,4 @@ Mash in at **67 °C** with 12.2 litres and hold for 60 minutes. Boil 27 litres f
 Ferment at **20 °C**, then lager for 4 weeks at 12 °C. Ready to drink after about
 5 weeks.
 
-> Tip: The oats make the beer prone to oxidation, so avoid splashing and adding
-> extra oxygen when bottling. 🍺
+> Tip: The oats make the beer prone to oxidation, so avoid splashing and adding extra oxygen when bottling. 🍺

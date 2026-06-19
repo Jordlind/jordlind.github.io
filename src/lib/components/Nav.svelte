@@ -13,6 +13,11 @@
 			label: $t('nav.beers'),
 			match: (p: string) => p.startsWith(`${base}/beers`)
 		},
+		{
+			href: `${base}/calculator`,
+			label: $t('nav.calculator'),
+			match: (p: string) => p === `${base}/calculator`
+		},
 		{ href: `${base}/about`, label: $t('nav.about'), match: (p: string) => p === `${base}/about` }
 	]);
 

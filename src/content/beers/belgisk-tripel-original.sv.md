@@ -13,7 +13,7 @@ images:
   - belgisk-tripel-3.jpg
 tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
 available: true
-order: 3
+order: 1
 ---
 
 # Recept (23 liter)

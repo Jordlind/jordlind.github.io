@@ -13,7 +13,7 @@ images:
   - belgisk-tripel-3.jpg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
 available: true
-order: 3
+order: 1
 ---
 
 # Recipe (23 litres)

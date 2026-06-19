@@ -9,7 +9,7 @@ fg: 1014
 image: havre-stout.jpg
 tagline: Len struktur och fylliga rostade chokladsmaker – ett tröstande vinteröl.
 available: true
-order: 4
+order: 2
 ---
 
 # Recept (23 liter)
@@ -51,5 +51,4 @@ Mäska in vid **67 °C** med 12,2 liter och håll i 60 minuter. Koka 27 liter i
 Jäs vid **20 °C** och lagra sedan i 4 veckor vid 12 °C. Klar att dricka efter
 ungefär 5 veckor.
 
-> Tips: Havren gör att ölet lättare slår av sig, så undvik att tillsätta mer syre
-> (från plask) när du tappar ölet på flaska. 🍺
+> Tips: Havren gör att ölet lättare slår av sig, så undvik att tillsätta mer syre (från plask) när du tappar ölet på flaska. 🍺
