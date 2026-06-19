@@ -44,6 +44,20 @@ export function ibuForAddition(addition: HopAddition, gravity: number, volumeL: 
 	return (grams * aaFraction * utilization * 1000) / safeVolume;
 }
 
+/**
+ * Simplified IBU mode: Tinseth time curve without gravity correction.
+ * Useful when OG is unknown and you still want a reasonable estimate.
+ */
+export function ibuForAdditionNoGravity(addition: HopAddition, volumeL: number): number {
+	const safeVolume = Math.max(0.0001, volumeL);
+	const aaFraction = clampPositive(addition.alphaAcidPercent) / 100;
+	const grams = clampPositive(addition.grams);
+	const boilTime = clampPositive(addition.boilMinutes);
+	const utilization = (1 - Math.exp(-0.04 * boilTime)) / 4.15;
+
+	return (grams * aaFraction * utilization * 1000) / safeVolume;
+}
+
 export function abvFromOgFg(og: number, fg: number): number {
 	const safeOg = Math.max(1, og);
 	const safeFg = Math.max(0.9, fg);
