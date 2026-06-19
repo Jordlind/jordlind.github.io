@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import {
 		computeRecipeMetrics,
+		createAllSections,
 		createDefaultRecipe,
 		createDefaultSections,
 		recipeFromBeerData,
@@ -39,6 +40,7 @@
 			brewed: selectedRecipe.brewed,
 			status: selectedRecipe.status
 		});
+		sections = createAllSections();
 	});
 
 	// A collapsed section is excluded from both export and calculations.

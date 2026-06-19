@@ -74,7 +74,7 @@ export function canonicalRecipeObject(
 
 	if (sections.identity) obj.content = contentBlock(recipe, locale);
 
-	obj.batchVolumeL = recipe.batchVolumeL;
+	if (sections.boil) obj.batchVolumeL = recipe.batchVolumeL;
 	if (sections.mash) obj.mashWaterL = recipe.mashWaterL;
 	if (sections.boil) obj.preBoilVolumeL = recipe.preBoilVolumeL;
 
@@ -140,7 +140,7 @@ export function canonicalRecipeObject(
 
 	const meta: Record<string, unknown> = { status: recipe.status };
 	if (recipe.brewed) meta.brewed = recipe.brewed;
-	obj.meta = meta;
+	if (sections.identity) obj.meta = meta;
 
 	return obj;
 }
@@ -163,22 +163,26 @@ export function recipeToJson(
 	locale: Locale = 'sv'
 ): string {
 	const { og, fg } = effectiveGravity(recipe);
-	return JSON.stringify(
-		{
-			recipe: canonicalRecipeObject(recipe, sections, locale),
-			results: {
-				og: round(og, 3),
-				fg: round(fg, 3),
-				abv: round(metrics.abv, 1),
-				ibu: round(metrics.ibu, 1),
-				ebc: round(metrics.color.ebc, 1),
-				srm: round(metrics.color.srm, 1),
-				priming: round(metrics.priming.grams, 1)
-			}
-		},
-		null,
-		2
-	);
+
+	const results: Record<string, number> = {};
+	if (sections.gravity) {
+		results.og = round(og, 3);
+		results.fg = round(fg, 3);
+		results.abv = round(metrics.abv, 1);
+	}
+	if (sections.boil) results.ibu = round(metrics.ibu, 1);
+	if (sections.mash) {
+		results.ebc = round(metrics.color.ebc, 1);
+		results.srm = round(metrics.color.srm, 1);
+	}
+	if (sections.priming) results.priming = round(metrics.priming.grams, 1);
+
+	const payload: Record<string, unknown> = {
+		recipe: canonicalRecipeObject(recipe, sections, locale)
+	};
+	if (Object.keys(results).length > 0) payload.results = results;
+
+	return JSON.stringify(payload, null, 2);
 }
 
 type MarkdownLabels = {
@@ -319,17 +323,17 @@ export function recipeToMarkdown(
 	const { og, fg } = effectiveGravity(recipe);
 	const lines: string[] = [];
 
-	const heading = recipe.name.trim() || (locale === 'sv' ? 'Recept' : 'Recipe');
-	lines.push(`# ${heading}`);
-	if (recipe.style.trim()) lines.push('', `*${recipe.style.trim()}*`);
-	if (recipe.tagline.trim()) lines.push('', `> ${recipe.tagline.trim()}`);
-	if (sections.identity && recipe.description.trim()) {
-		lines.push('', recipe.description.trim());
+	if (sections.identity) {
+		const heading = recipe.name.trim() || (locale === 'sv' ? 'Recept' : 'Recipe');
+		lines.push(`# ${heading}`);
+		if (recipe.style.trim()) lines.push('', `*${recipe.style.trim()}*`);
+		if (recipe.tagline.trim()) lines.push('', `> ${recipe.tagline.trim()}`);
+		if (recipe.description.trim()) lines.push('', recipe.description.trim());
 	}
 
 	// Overview stats
-	lines.push('', `## ${L.overview}`, '');
-	const stats: string[] = [`- **${L.batch}:** ${round(recipe.batchVolumeL, 1)} L`];
+	const stats: string[] = [];
+	if (sections.boil) stats.push(`- **${L.batch}:** ${round(recipe.batchVolumeL, 1)} L`);
 	if (sections.gravity) {
 		stats.push(`- **${L.og}:** ${og.toFixed(3)}`);
 		stats.push(`- **${L.fg}:** ${fg.toFixed(3)}`);
@@ -337,7 +341,9 @@ export function recipeToMarkdown(
 	}
 	if (sections.boil) stats.push(`- **${L.ibu}:** ${round(metrics.ibu, 1)}`);
 	if (sections.mash) stats.push(`- **${L.colour}:** ${round(metrics.color.ebc, 1)} EBC`);
-	lines.push(...stats);
+	if (stats.length > 0) {
+		lines.push('', `## ${L.overview}`, '', ...stats);
+	}
 
 	// Mash
 	if (sections.mash) {
@@ -410,7 +416,7 @@ export function recipeToMarkdown(
 		lines.push(`- **${L.priming} (g):** ${round(metrics.priming.grams, 1)}`);
 	}
 
-	return lines.join('\n') + '\n';
+	return lines.join('\n').trim() + '\n';
 }
 
 export function serializeRecipe(

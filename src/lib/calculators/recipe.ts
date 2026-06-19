@@ -37,7 +37,21 @@ export const SECTION_IDS: SectionId[] = [
 ];
 export type SectionState = Record<SectionId, boolean>;
 
+/** A new, blank recipe starts with every section collapsed (excluded). */
 export function createDefaultSections(): SectionState {
+	return {
+		identity: false,
+		mash: false,
+		boil: false,
+		gravity: false,
+		fermentation: false,
+		lagering: false,
+		priming: false
+	};
+}
+
+/** Every section expanded — used when importing an existing recipe so its data is visible. */
+export function createAllSections(): SectionState {
 	return {
 		identity: true,
 		mash: true,
