@@ -1,4 +1,4 @@
-export type IconName = 'plus' | 'x' | 'info' | 'copy' | 'check' | 'download';
+export type IconName = 'plus' | 'x' | 'info' | 'copy' | 'check' | 'download' | 'chevron';
 
 type IconDef = {
 	viewBox: string;
@@ -29,5 +29,9 @@ export const ICONS: Record<IconName, IconDef> = {
 	download: {
 		viewBox: '0 0 24 24',
 		path: 'M12 3a1 1 0 0 1 1 1v8.6l2.3-2.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4l2.3 2.3V4a1 1 0 0 1 1-1zM5 17a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1z'
+	},
+	chevron: {
+		viewBox: '0 0 24 24',
+		path: 'M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z'
 	}
 };

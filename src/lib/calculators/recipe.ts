@@ -11,11 +11,43 @@ import {
 	type MaltAddition,
 	type PrimingSugarType
 } from './brewing';
-import type { BeerRecipeData } from '$lib/types';
+import type { BeerRecipeData, BeerStatus } from '$lib/types';
 
 /** The four values the recipe builder can compute. */
 export type MetricId = 'abv' | 'ibu' | 'color' | 'priming';
 export const METRIC_IDS: MetricId[] = ['abv', 'ibu', 'color', 'priming'];
+
+/** Collapsible builder sections. Collapsing a section excludes it from both export and calculations. */
+export type SectionId =
+	| 'identity'
+	| 'mash'
+	| 'boil'
+	| 'gravity'
+	| 'fermentation'
+	| 'lagering'
+	| 'priming';
+export const SECTION_IDS: SectionId[] = [
+	'identity',
+	'mash',
+	'boil',
+	'gravity',
+	'fermentation',
+	'lagering',
+	'priming'
+];
+export type SectionState = Record<SectionId, boolean>;
+
+export function createDefaultSections(): SectionState {
+	return {
+		identity: true,
+		mash: true,
+		boil: true,
+		gravity: true,
+		fermentation: true,
+		lagering: true,
+		priming: true
+	};
+}
 
 /** How OG/FG are provided: typed in manually or estimated from the grain bill. */
 export type GravityMode = 'manual' | 'estimate';
@@ -28,6 +60,7 @@ export type BuilderHop = {
 	alphaAcidPercent: number;
 	boilMinutes: number;
 };
+export type BuilderAddition = { id: number; name: string; amount: string; addAt: string };
 
 /**
  * A single, manually editable recipe that drives every result. It mirrors the
@@ -35,21 +68,42 @@ export type BuilderHop = {
  * parameters (efficiency, yeast attenuation, priming settings).
  */
 export interface BuilderRecipe {
+	// Identity (lives in the markdown content file of a real beer)
+	name: string;
+	style: string;
+	tagline: string;
+	description: string;
+	brewed: string;
+	status: BeerStatus;
+	// Water & volumes
 	mashWaterL: number;
-	spargeWaterL: number;
 	preBoilVolumeL: number;
 	batchVolumeL: number;
+	// Gravity
 	gravityMode: GravityMode;
 	og: number;
 	fg: number;
+	// Mash & boil
 	mashTempC: number;
+	mashDurationMin: number;
+	boilDurationMin: number;
+	// Estimation parameters
 	efficiencyPercent: number;
 	yeastAttenuationPercent: number;
+	// Fermentation
+	fermTempC: number;
+	lageringTempC: number;
+	lageringWeeks: number;
+	readyWeeks: number;
+	yeast: string;
+	// Bottle conditioning / priming
 	primingTempC: number;
 	targetCo2Vol: number;
 	sugarType: PrimingSugarType;
+	// Ingredients
 	malts: BuilderMalt[];
 	hops: BuilderHop[];
+	additions: BuilderAddition[];
 }
 
 export interface RecipeMetrics {
@@ -62,16 +116,28 @@ export interface RecipeMetrics {
 
 export function createDefaultRecipe(): BuilderRecipe {
 	return {
+		name: '',
+		style: '',
+		tagline: '',
+		description: '',
+		brewed: '',
+		status: 'planned',
 		mashWaterL: 16,
-		spargeWaterL: 12,
 		preBoilVolumeL: 27,
 		batchVolumeL: 20,
-		gravityMode: 'manual',
+		gravityMode: 'estimate',
 		og: 1.058,
 		fg: 1.012,
 		mashTempC: 67,
+		mashDurationMin: 60,
+		boilDurationMin: 60,
 		efficiencyPercent: 75,
 		yeastAttenuationPercent: 78,
+		fermTempC: 18,
+		lageringTempC: 0,
+		lageringWeeks: 0,
+		readyWeeks: 2,
+		yeast: '',
 		primingTempC: 20,
 		targetCo2Vol: 2.4,
 		sugarType: 'dextrose',
@@ -79,7 +145,8 @@ export function createDefaultRecipe(): BuilderRecipe {
 			{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
 			{ id: 2, name: 'Münchnermalt', weightKg: 0.7, colorEbc: 18 }
 		],
-		hops: [{ id: 1, name: 'Saaz', grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }]
+		hops: [{ id: 1, name: 'Saaz', grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }],
+		additions: []
 	};
 }
 
@@ -178,8 +245,17 @@ function gravityToSg(value: number): number {
 
 const SUGAR_PATTERN = /socker|sugar|candi|dextro|honey|honung|syrup|sirap/i;
 
+/** Optional identity/meta passed alongside imported recipe data. */
+export type ImportedRecipeMeta = {
+	name?: string;
+	style?: string;
+	tagline?: string;
+	brewed?: string | null;
+	status?: BeerStatus;
+};
+
 /** Build a fully editable recipe from imported canonical beer recipe data. */
-export function recipeFromBeerData(data: BeerRecipeData): BuilderRecipe {
+export function recipeFromBeerData(data: BeerRecipeData, meta?: ImportedRecipeMeta): BuilderRecipe {
 	const base = createDefaultRecipe();
 
 	const malts: BuilderMalt[] = data.malts.map((malt, index) => ({
@@ -207,23 +283,46 @@ export function recipeFromBeerData(data: BeerRecipeData): BuilderRecipe {
 		boilMinutes: hop.boilMinutes
 	}));
 
+	// Non-sugar additions stay as additions (finings, spices, etc.).
+	const additions: BuilderAddition[] = data.additions
+		.filter((addition) => !SUGAR_PATTERN.test(addition.name))
+		.map((addition, index) => ({
+			id: index + 1,
+			name: addition.name,
+			amount: addition.amount,
+			addAt: addition.addAt ?? ''
+		}));
+
 	const grainBill = [...malts, ...sugarRows];
 
 	const mashWaterL = data.water.mashWaterL ?? base.mashWaterL;
 	const preBoilVolumeL = data.water.preBoilVolumeL ?? base.preBoilVolumeL;
-	const spargeWaterL = Math.max(0, Number((preBoilVolumeL - mashWaterL).toFixed(1)));
 
 	return {
 		...base,
+		name: meta?.name ?? base.name,
+		style: meta?.style ?? base.style,
+		tagline: meta?.tagline ?? base.tagline,
+		brewed: meta?.brewed ?? base.brewed,
+		status: meta?.status ?? base.status,
 		mashWaterL,
-		spargeWaterL: spargeWaterL > 0 ? spargeWaterL : base.spargeWaterL,
 		preBoilVolumeL,
 		batchVolumeL: data.water.batchVolumeL,
 		gravityMode: 'manual',
 		og: gravityToSg(data.og),
 		fg: gravityToSg(data.fg),
 		mashTempC: data.mash?.tempC ?? base.mashTempC,
+		mashDurationMin: data.mash?.durationMin ?? base.mashDurationMin,
+		boilDurationMin: data.boil?.durationMin ?? base.boilDurationMin,
+		yeastAttenuationPercent:
+			data.fermentation?.attenuationPercent ?? base.yeastAttenuationPercent,
+		fermTempC: data.fermentation?.tempC ?? base.fermTempC,
+		lageringTempC: data.fermentation?.lageringTempC ?? base.lageringTempC,
+		lageringWeeks: data.fermentation?.lageringWeeks ?? base.lageringWeeks,
+		readyWeeks: data.fermentation?.readyWeeks ?? base.readyWeeks,
+		yeast: data.yeast ?? base.yeast,
 		malts: grainBill.length > 0 ? grainBill : base.malts,
-		hops: hops.length > 0 ? hops : base.hops
+		hops: hops.length > 0 ? hops : base.hops,
+		additions
 	};
 }

@@ -92,10 +92,12 @@ export const translations: Record<Locale, Dict> = {
 		'beer.recipe.lastMin': 'Sista {min} min',
 		'beer.recipe.other': 'Övrigt',
 		'beer.recipe.yeast': 'Jäst',
+		'beer.recipe.attenuation': 'Utjäsning',
 		'beer.recipe.lager': 'Lagra',
 		'beer.recipe.weeks': 'veckor',
 		'beer.recipe.at': 'vid',
 		'beer.recipe.readyAfter': 'Klar efter',
+		'beer.recipe.conditioning': 'Lagring & mognad',
 
 		'about.title': 'Om Jordlind',
 
@@ -109,7 +111,8 @@ export const translations: Record<Locale, Dict> = {
 		'calc.gravity': 'Vörtstyrka (OG)',
 		'calc.gravityOg': 'Vörtstyrka (OG)',
 		'calc.ibu.useOg': 'Använd OG-korrigering (Tinseth exakt)',
-		'calc.ibu.useOgTooltip': 'Med OG-korrigering är formeln exaktare – humle i en tyngre vört utnyttjas sämre. Utan OG räknar kalkylatorn ändå rättvisande med koktid, men utan den extra gravitationsanpassningen. Välj den som passar ditt recept.',
+		'calc.ibu.useOgTooltip':
+			'Med OG-korrigering är formeln exaktare – humle i en tyngre vört utnyttjas sämre. Utan OG räknar kalkylatorn ändå rättvisande med koktid, men utan den extra gravitationsanpassningen. Välj den som passar ditt recept.',
 		'calc.start': 'Startvärde (OG)',
 		'calc.final': 'Slutvärde (FG)',
 		'calc.temp': 'Öltemperatur (°C)',
@@ -161,13 +164,16 @@ export const translations: Record<Locale, Dict> = {
 		'calc.abv.convertedPoints': 'Motsvarar poäng',
 		'calc.abv.mode.measured': 'Från mätt OG/FG',
 		'calc.abv.mode.estimate': 'Uppskatta från recept',
-		'calc.abv.estimate.desc': 'Uppskattar alkoholhalt från maltnota, effektivitet, jäst och mäsktemperatur.',
-		'calc.abv.estimate.intro': 'Mata in maltnota, brygghuseffektivitet, jästens utjäsningsgrad och mäsktemperatur så räknar kalkylatorn fram en uppskattad OG, FG och ABV – innan du brygger.',
+		'calc.abv.estimate.desc':
+			'Uppskattar alkoholhalt från maltnota, effektivitet, jäst och mäsktemperatur.',
+		'calc.abv.estimate.intro':
+			'Mata in maltnota, brygghuseffektivitet, jästens utjäsningsgrad och mäsktemperatur så räknar kalkylatorn fram en uppskattad OG, FG och ABV – innan du brygger.',
 		'calc.abv.estimate.efficiency': 'Brygghuseffektivitet (%)',
 		'calc.abv.estimate.attenuation': 'Jästens utjäsningsgrad (%)',
 		'calc.abv.estimate.attenuationHint': 'Tillverkarens angivna attenuation, t.ex. 78 % för US-05.',
 		'calc.abv.estimate.mashTemp': 'Mäsktemperatur (°C)',
-		'calc.abv.estimate.mashTempHint': 'Lägre temp ger torrare öl (högre utjäsning), högre temp ger fylligare.',
+		'calc.abv.estimate.mashTempHint':
+			'Lägre temp ger torrare öl (högre utjäsning), högre temp ger fylligare.',
 		'calc.abv.estimate.fermentables': 'Maltnota & socker',
 		'calc.abv.estimate.addFermentable': 'Lägg till ingrediens',
 		'calc.abv.estimate.fermentableName': 'Ingrediens',
@@ -183,28 +189,31 @@ export const translations: Record<Locale, Dict> = {
 		'calc.abv.ferment.sugar': 'Socker',
 		'calc.formulaIbu': 'Tinseth används för utnyttjande och IBU per humlegiva.',
 		'calc.formulaIbuNoOg': 'Förenklad IBU använder koktid men hoppar över OG-korrigering.',
-		'calc.formulaAbv': 'SG-metod: (OG − FG) × 131.25. Gravity points: (OG-poäng − FG-poäng) / 7.64. Båda ger i princip samma svar.',
+		'calc.formulaAbv':
+			'SG-metod: (OG − FG) × 131.25. Gravity points: (OG-poäng − FG-poäng) / 7.64. Båda ger i princip samma svar.',
 		'calc.formulaColor': 'Färg beräknas med Morey (MCU till SRM/EBC).',
 		'calc.formulaPriming': 'Primingsocker beror på mål-CO2, temperatur och sockertyp.',
 		'calc.icon.add': 'Lägg till',
 		'calc.icon.remove': 'Ta bort rad',
-		'calc.note':
-			'Värdena är uppskattningar men ger ett stabilt underlag för receptjustering.',
+		'calc.note': 'Värdena är uppskattningar men ger ett stabilt underlag för receptjustering.',
 		'calc.prefilledFromBeer': 'Förifylld från recept',
 		'calc.prefillMissing': 'Kunde inte hitta receptdata för den valda ölen.',
 		'calc.import.label': 'Importera recept',
 		'calc.import.placeholder': 'Välj en öl',
 		'calc.import.button': 'Importera data',
+		'calc.import.clear': 'Rensa',
+		'calc.import.clearHelp': 'Töm allt och börja om med ett tomt recept.',
 		'calc.build.subtitle':
 			'Bygg ditt recept manuellt eller importera ett befintligt – så räknas ABV, IBU, färg och priming ut live.',
 		'calc.build.whatToCalc': 'Vad vill du räkna ut?',
 		'calc.build.empty': 'Välj minst ett värde att räkna ut ovan.',
 		'calc.build.section.batch': 'Sats',
-		'calc.build.section.gravity': 'Vörtstyrka & jäsning',
+		'calc.build.section.gravity': 'Vörtstyrka (OG & FG)',
 		'calc.build.section.priming': 'Kolsättning (priming)',
 		'calc.build.gravityHelp':
 			'OG är vörtens densitet innan jäsning, FG efter. Skriv in uppmätta eller målvärden – eller estimera dem från maltnotan nedan.',
-		'calc.build.colorNote': 'Socker och ingredienser utan färg (EBC 0) påverkar inte färgberäkningen.',
+		'calc.build.colorNote':
+			'Socker och ingredienser utan färg (EBC 0) påverkar inte färgberäkningen.',
 		'calc.build.estimate.toggle': 'Estimera OG/FG från maltnotan',
 		'calc.build.estimate.intro':
 			'Utgår från maltnotan, brygghuseffektivitet, jästens utjäsningsgrad och mäsktemperatur. Malttyp (och därmed sockerpotential) känns av automatiskt från namn och färg – döp en rad till t.ex. ”Socker” så räknas den som rent socker.',
@@ -240,6 +249,68 @@ export const translations: Record<Locale, Dict> = {
 			'Mäsktemperaturen styr vilka sockerarter som bildas. Lägre temp (62–65 °C) ger torrare, mer utjäst öl; högre temp (68–70 °C) ger fylligare öl med högre FG. 67 °C är en neutral mittpunkt.',
 		'calc.build.estimatedHelp':
 			'De här värdena räknas fram automatiskt från maltnotan, effektiviteten, utjäsningsgraden och mäsktemperaturen. Justera fälten ovan så uppdateras OG och FG direkt.',
+		'calc.build.section.identity': 'Receptidentitet',
+		'calc.identity.intro':
+			'Namn, stil och beskrivning – samma fält som webbplatsens receptsidor. Fylls i automatiskt om du importerar ett befintligt recept.',
+		'calc.identity.name': 'Receptnamn',
+		'calc.identity.style': 'Stil',
+		'calc.identity.tagline': 'Slogan',
+		'calc.identity.description': 'Beskrivning',
+		'calc.identity.descriptionPlaceholder':
+			'Berätta om ölen – inspiration, smakprofil, bryggarens anteckningar …',
+		'calc.identity.brewed': 'Bryggd (datum)',
+		'calc.identity.status': 'Status',
+		'calc.build.mashDuration': 'Mäsktid (min)',
+		'calc.build.mashDurationHelp':
+			'Hur länge mäsken hålls vid mäsktemperaturen, oftast 60 minuter. Längre tid kan ge mer utjäst öl.',
+		'calc.build.section.boil': 'Kok & tillsatser',
+		'calc.build.boilDuration': 'Koktid (min)',
+		'calc.build.boilDurationHelp':
+			'Total koktid för vörten, vanligtvis 60–90 minuter. Påverkar avdunstning och humleutnyttjande.',
+		'calc.build.additions': 'Övriga tillsatser',
+		'calc.build.additionsIntro':
+			'Kryddor, klarningsmedel, frukt eller annat utöver malt och humle. Lämna tomt om receptet inte har några.',
+		'calc.build.addAddition': 'Lägg till tillsats',
+		'calc.build.additionAmount': 'Mängd',
+		'calc.build.additionTiming': 'Tidpunkt',
+		'calc.build.additionTimingPlaceholder': 't.ex. 10 min kvar, flameout, jäsning',
+		'calc.build.section.fermentation': 'Jäsning',
+		'calc.build.fermentationIntro':
+			'Jäst, utjäsningsgrad och jästemperatur – allt jästen behöver för att göra sitt jobb.',
+		'calc.build.section.lagering': 'Lagring & mognad',
+		'calc.build.lageringIntro':
+			'Eventuell kalllagring och hur länge ölen behöver mogna innan den är god att dricka.',
+		'calc.build.lageringWeeksHelp':
+			'Hur länge ölen kalllagras efter jäsning. Lämna 0 om ingen lagring behövs.',
+		'calc.build.primingIntro':
+			'Kolsättning på flaska – hur mycket socker som behövs för att nå önskad kolsyra.',
+		'calc.build.primingTempHelp':
+			'Den högsta temperatur ölen haft efter jäsning. Varmare öl har mindre löst CO2 kvar och behöver därför mer socker.',
+		'calc.build.targetCo2Help':
+			'Hur mycket kolsyra du vill ha i den färdiga ölen. Lager och pilsner ligger ofta på 2,4–2,6 vol, ales 2,0–2,4, veteöl 3,0+.',
+		'calc.build.sugarTypeHelp':
+			'Vilken typ av socker du kolsätter med. Dextros (druvsocker) är vanligast; vanligt strösocker (sackaros) och torrt maltextrakt (DME) går också bra och räknas om automatiskt.',
+		'calc.build.expand': 'Expandera sektion',
+		'calc.build.collapse': 'Fäll ihop och uteslut sektion',
+		'calc.build.excludedHint': 'Hopfälld – utesluts från beräkning och export.',
+		'calc.build.fermTemp': 'Jästemperatur (°C)',
+		'calc.build.fermTempHelp':
+			'Temperaturen jäsningen sker vid. Ales jäser ofta vid 18–20 °C, lager kallare vid 9–13 °C.',
+		'calc.build.lageringTemp': 'Lagringstemperatur (°C)',
+		'calc.build.lageringTempHelp':
+			'Om ölen kalllagras (lagring) – temperaturen den lagras vid. Lämna 0 om ingen lagring behövs.',
+		'calc.build.lageringWeeks': 'Lagringstid (veckor)',
+		'calc.build.readyWeeks': 'Klar efter (veckor)',
+		'calc.build.readyWeeksHelp':
+			'Ungefär hur länge efter bryggning ölen är god att dricka, inklusive jäsning och kolsättning.',
+		'calc.build.yeast': 'Jäst',
+		'calc.build.yeastHelp': 'Jäststam, t.ex. ”Whitelabs WLP820” eller ”Fermentis US-05”.',
+		'calc.build.mashIntro':
+			'Mäskvatten, temperatur och tid – plus maltnotan som ger både färg och socker.',
+		'calc.build.boilIntro':
+			'Kokvolym och koktid, humlegivor och eventuella övriga tillsatser under koket.',
+		'calc.build.attenuationInFerment':
+			'Utjäsningsgraden anges i jäsningssektionen nedan – den följer jästen du använder.',
 		'calc.export.title': 'Exportera recept',
 		'calc.export.intro':
 			'Ladda ner eller kopiera ditt recept. Växla mellan YAML (samma format som webbplatsens recept), JSON eller Markdown.',
@@ -336,10 +407,12 @@ export const translations: Record<Locale, Dict> = {
 		'beer.recipe.lastMin': 'Last {min} min',
 		'beer.recipe.other': 'Other',
 		'beer.recipe.yeast': 'Yeast',
+		'beer.recipe.attenuation': 'Attenuation',
 		'beer.recipe.lager': 'Lager',
 		'beer.recipe.weeks': 'weeks',
 		'beer.recipe.at': 'at',
 		'beer.recipe.readyAfter': 'Ready after',
+		'beer.recipe.conditioning': 'Conditioning & maturation',
 
 		'about.title': 'About Jordlind',
 
@@ -353,7 +426,8 @@ export const translations: Record<Locale, Dict> = {
 		'calc.gravity': 'Wort Gravity (OG)',
 		'calc.gravityOg': 'Wort Gravity (OG)',
 		'calc.ibu.useOg': 'Use OG correction (Tinseth accurate)',
-		'calc.ibu.useOgTooltip': 'With OG correction the formula is more precise – hops in a heavier wort are absorbed less efficiently. Without OG the calculator still gives a fair result based on boil time, just without the gravity adjustment. Use whichever fits your recipe.',
+		'calc.ibu.useOgTooltip':
+			'With OG correction the formula is more precise – hops in a heavier wort are absorbed less efficiently. Without OG the calculator still gives a fair result based on boil time, just without the gravity adjustment. Use whichever fits your recipe.',
 		'calc.start': 'Original Gravity (OG)',
 		'calc.final': 'Final Gravity (FG)',
 		'calc.temp': 'Beer Temperature (°C)',
@@ -405,13 +479,17 @@ export const translations: Record<Locale, Dict> = {
 		'calc.abv.convertedPoints': 'Equivalent points',
 		'calc.abv.mode.measured': 'From measured OG/FG',
 		'calc.abv.mode.estimate': 'Estimate from recipe',
-		'calc.abv.estimate.desc': 'Estimates alcohol from grain bill, efficiency, yeast and mash temperature.',
-		'calc.abv.estimate.intro': 'Enter the grain bill, brewhouse efficiency, yeast attenuation and mash temperature to get an estimated OG, FG and ABV — before you brew.',
+		'calc.abv.estimate.desc':
+			'Estimates alcohol from grain bill, efficiency, yeast and mash temperature.',
+		'calc.abv.estimate.intro':
+			'Enter the grain bill, brewhouse efficiency, yeast attenuation and mash temperature to get an estimated OG, FG and ABV — before you brew.',
 		'calc.abv.estimate.efficiency': 'Brewhouse Efficiency (%)',
 		'calc.abv.estimate.attenuation': 'Yeast Attenuation (%)',
-		'calc.abv.estimate.attenuationHint': 'The manufacturer’s stated attenuation, e.g. 78 % for US-05.',
+		'calc.abv.estimate.attenuationHint':
+			'The manufacturer’s stated attenuation, e.g. 78 % for US-05.',
 		'calc.abv.estimate.mashTemp': 'Mash Temperature (°C)',
-		'calc.abv.estimate.mashTempHint': 'Lower temps make a drier beer (higher attenuation), higher temps fuller.',
+		'calc.abv.estimate.mashTempHint':
+			'Lower temps make a drier beer (higher attenuation), higher temps fuller.',
 		'calc.abv.estimate.fermentables': 'Grain Bill & Sugar',
 		'calc.abv.estimate.addFermentable': 'Add Ingredient',
 		'calc.abv.estimate.fermentableName': 'Ingredient',
@@ -427,28 +505,31 @@ export const translations: Record<Locale, Dict> = {
 		'calc.abv.ferment.sugar': 'Sugar',
 		'calc.formulaIbu': 'Tinseth is used for utilization and IBU per hop addition.',
 		'calc.formulaIbuNoOg': 'Simplified IBU uses boil time but skips OG correction.',
-		'calc.formulaAbv': 'SG method: (OG − FG) × 131.25. Gravity points: (OG pts − FG pts) / 7.64. Both give essentially the same result.',
+		'calc.formulaAbv':
+			'SG method: (OG − FG) × 131.25. Gravity points: (OG pts − FG pts) / 7.64. Both give essentially the same result.',
 		'calc.formulaColor': 'Colour is calculated with Morey (MCU to SRM/EBC).',
 		'calc.formulaPriming': 'Priming sugar depends on target CO2, temperature, and sugar type.',
 		'calc.icon.add': 'Add',
 		'calc.icon.remove': 'Remove row',
-		'calc.note':
-			'These values are estimates, but they provide a solid baseline for recipe tuning.',
+		'calc.note': 'These values are estimates, but they provide a solid baseline for recipe tuning.',
 		'calc.prefilledFromBeer': 'Prefilled from recipe',
 		'calc.prefillMissing': 'Could not find recipe data for the selected beer.',
 		'calc.import.label': 'Import recipe',
 		'calc.import.placeholder': 'Select a beer',
 		'calc.import.button': 'Import data',
+		'calc.import.clear': 'Clear',
+		'calc.import.clearHelp': 'Clear everything and start over with an empty recipe.',
 		'calc.build.subtitle':
 			'Build your recipe manually or import an existing one — ABV, IBU, colour and priming are calculated live.',
 		'calc.build.whatToCalc': 'What do you want to calculate?',
 		'calc.build.empty': 'Select at least one value to calculate above.',
 		'calc.build.section.batch': 'Batch',
-		'calc.build.section.gravity': 'Gravity & fermentation',
+		'calc.build.section.gravity': 'Wort strength (OG & FG)',
 		'calc.build.section.priming': 'Priming',
 		'calc.build.gravityHelp':
 			'OG is the wort density before fermentation, FG after. Enter measured or target values — or estimate them from the grain bill below.',
-		'calc.build.colorNote': 'Sugar and ingredients without colour (EBC 0) do not affect the colour calculation.',
+		'calc.build.colorNote':
+			'Sugar and ingredients without colour (EBC 0) do not affect the colour calculation.',
 		'calc.build.estimate.toggle': 'Estimate OG/FG from the grain bill',
 		'calc.build.estimate.intro':
 			'Based on the grain bill, brewhouse efficiency, yeast attenuation and mash temperature. Malt type (and therefore sugar potential) is detected automatically from name and colour — name a row e.g. “Sugar” to count it as pure sugar.',
@@ -484,6 +565,68 @@ export const translations: Record<Locale, Dict> = {
 			'Mash temperature controls which sugars form. Lower temps (62–65 °C) give a drier, more fermentable beer; higher temps (68–70 °C) give a fuller body with a higher FG. 67 °C is a neutral midpoint.',
 		'calc.build.estimatedHelp':
 			'These values are calculated automatically from the grain bill, efficiency, attenuation and mash temperature. Adjust the fields above and the OG and FG update instantly.',
+		'calc.build.section.identity': 'Recipe identity',
+		'calc.identity.intro':
+			'Name, style and description – the same fields as the site’s recipe pages. Filled in automatically if you import an existing recipe.',
+		'calc.identity.name': 'Recipe name',
+		'calc.identity.style': 'Style',
+		'calc.identity.tagline': 'Tagline',
+		'calc.identity.description': 'Description',
+		'calc.identity.descriptionPlaceholder':
+			'Tell the story of the beer – inspiration, flavour profile, brewer’s notes …',
+		'calc.identity.brewed': 'Brewed (date)',
+		'calc.identity.status': 'Status',
+		'calc.build.mashDuration': 'Mash time (min)',
+		'calc.build.mashDurationHelp':
+			'How long the mash is held at the mash temperature, usually 60 minutes. Longer rests can give a more fermentable wort.',
+		'calc.build.section.boil': 'Boil & additions',
+		'calc.build.boilDuration': 'Boil time (min)',
+		'calc.build.boilDurationHelp':
+			'Total boil time for the wort, usually 60–90 minutes. Affects evaporation and hop utilisation.',
+		'calc.build.additions': 'Other additions',
+		'calc.build.additionsIntro':
+			'Spices, finings, fruit or anything beyond malt and hops. Leave empty if the recipe has none.',
+		'calc.build.addAddition': 'Add addition',
+		'calc.build.additionAmount': 'Amount',
+		'calc.build.additionTiming': 'Timing',
+		'calc.build.additionTimingPlaceholder': 'e.g. 10 min left, flameout, fermentation',
+		'calc.build.section.fermentation': 'Fermentation',
+		'calc.build.fermentationIntro':
+			'Yeast, attenuation and fermentation temperature – everything the yeast needs to do its job.',
+		'calc.build.section.lagering': 'Conditioning & maturation',
+		'calc.build.lageringIntro':
+			'Any cold conditioning and how long the beer needs to mature before it is ready to drink.',
+		'calc.build.lageringWeeksHelp':
+			'How long the beer is cold-conditioned after fermentation. Leave 0 if no lagering is needed.',
+		'calc.build.primingIntro':
+			'Bottle conditioning – how much sugar is needed to reach the desired carbonation.',
+		'calc.build.primingTempHelp':
+			'The highest temperature the beer reached after fermentation. Warmer beer holds less dissolved CO2 and therefore needs more sugar.',
+		'calc.build.targetCo2Help':
+			'How much carbonation you want in the finished beer. Lagers and pilsners are often 2.4–2.6 vol, ales 2.0–2.4, wheat beers 3.0+.',
+		'calc.build.sugarTypeHelp':
+			'The type of sugar you prime with. Dextrose (corn sugar) is most common; table sugar (sucrose) and dry malt extract (DME) work too and are converted automatically.',
+		'calc.build.expand': 'Expand section',
+		'calc.build.collapse': 'Collapse and exclude section',
+		'calc.build.excludedHint': 'Collapsed – excluded from calculation and export.',
+		'calc.build.fermTemp': 'Fermentation temp (°C)',
+		'calc.build.fermTempHelp':
+			'The temperature fermentation happens at. Ales often ferment at 18–20 °C, lagers cooler at 9–13 °C.',
+		'calc.build.lageringTemp': 'Lagering temp (°C)',
+		'calc.build.lageringTempHelp':
+			'If the beer is cold-conditioned (lagered) – the temperature it is stored at. Leave 0 if no lagering is needed.',
+		'calc.build.lageringWeeks': 'Lagering (weeks)',
+		'calc.build.readyWeeks': 'Ready after (weeks)',
+		'calc.build.readyWeeksHelp':
+			'Roughly how long after brewing the beer is ready to drink, including fermentation and carbonation.',
+		'calc.build.yeast': 'Yeast',
+		'calc.build.yeastHelp': 'Yeast strain, e.g. “Whitelabs WLP820” or “Fermentis US-05”.',
+		'calc.build.mashIntro':
+			'Mash water, temperature and time – plus the grain bill that gives both colour and sugar.',
+		'calc.build.boilIntro':
+			'Boil volume and time, hop additions and any other additions during the boil.',
+		'calc.build.attenuationInFerment':
+			'Set the attenuation in the fermentation section below – it follows the yeast you use.',
 		'calc.export.title': 'Export recipe',
 		'calc.export.intro':
 			'Download or copy your recipe. Switch between YAML (the same format as the site’s recipes), JSON or Markdown.',

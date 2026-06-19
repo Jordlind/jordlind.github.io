@@ -1,3 +1,24 @@
+content:
+  sv:
+    name: Belgisk Tripel Original
+    style: Belgisk Tripel
+    tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
+    description: |
+      Tack vare en mindre komplex maltsmak än kusinen Dubbel har belgisk Tripel en frisk, sträv eftersmak. Trots den höga alkoholhalten är smaken inte bedövande – gyllene, pärlande och farligt lättdrucken.
+
+      Det här är Jordlinds originalrecept – det som startade alltihop. En enkel maltnota av belgisk pilsnermalt och lite Caramunich I, jäst länge och kallt för ett rent, gyllene resultat.
+
+      > Stark, gyllene och lurigt mjuk. Skål! 🍺
+  en:
+    name: Belgian Tripel Original
+    style: Belgian Tripel
+    tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
+    description: |
+      Thanks to a less complex malt character than its cousin the Dubbel, the Belgian Tripel finishes fresh and crisp. Despite the high alcohol it never tastes heavy — golden, sparkling and dangerously easy to drink.
+
+      This is the original Jordlind recipe — the one that started it all. A simple grain bill of Belgian pilsner malt and a touch of Caramunich I, fermented long and cold for a clean, golden result.
+
+      > Strong, golden and deceptively gentle. Skål! 🍺
 batchVolumeL: 23
 mashWaterL: 16.3
 preBoilVolumeL: 27

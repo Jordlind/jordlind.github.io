@@ -2,39 +2,69 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import {
 		EXPORT_FORMATS,
+		recipeSlug,
 		serializeRecipe,
 		type ExportFormat
 	} from '$lib/calculators/recipeExport';
-	import type { BuilderRecipe, RecipeMetrics } from '$lib/calculators/recipe';
+	import type { BuilderRecipe, RecipeMetrics, SectionState } from '$lib/calculators/recipe';
+	import type { Locale } from '$lib/i18n/translations';
 
 	let {
 		t,
 		recipe,
 		metrics,
-		numberFormatter
+		sections,
+		locale
 	}: {
 		t: (key: string) => string;
 		recipe: BuilderRecipe;
 		metrics: RecipeMetrics;
-		numberFormatter: Intl.NumberFormat;
+		sections: SectionState;
+		locale: Locale;
 	} = $props();
 
 	let format = $state<ExportFormat>('yaml');
 	let copied = $state(false);
 	let copyTimer: ReturnType<typeof setTimeout> | undefined;
 
-	const content = $derived(serializeRecipe(format, recipe, metrics, t, numberFormatter));
+	const content = $derived(serializeRecipe(format, recipe, metrics, sections, locale));
 	const activeExt = $derived(EXPORT_FORMATS.find((f) => f.id === format)?.ext ?? 'txt');
 
-	async function copy() {
+	function flagCopied() {
+		copied = true;
+		clearTimeout(copyTimer);
+		copyTimer = setTimeout(() => (copied = false), 2000);
+	}
+
+	/** Older browsers / insecure contexts: copy via a temporary textarea. */
+	function legacyCopy(text: string): boolean {
 		try {
-			await navigator.clipboard.writeText(content);
-			copied = true;
-			clearTimeout(copyTimer);
-			copyTimer = setTimeout(() => (copied = false), 2000);
+			const textarea = document.createElement('textarea');
+			textarea.value = text;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			const ok = document.execCommand('copy');
+			document.body.removeChild(textarea);
+			return ok;
 		} catch {
-			copied = false;
+			return false;
 		}
+	}
+
+	async function copy() {
+		if (navigator.clipboard?.writeText) {
+			try {
+				await navigator.clipboard.writeText(content);
+				flagCopied();
+				return;
+			} catch {
+				// fall through to the legacy path below
+			}
+		}
+		if (legacyCopy(content)) flagCopied();
 	}
 
 	function download() {
@@ -42,7 +72,7 @@
 		const url = URL.createObjectURL(blob);
 		const anchor = document.createElement('a');
 		anchor.href = url;
-		anchor.download = `recept.${activeExt}`;
+		anchor.download = `${recipeSlug(recipe)}.${activeExt}`;
 		anchor.click();
 		URL.revokeObjectURL(url);
 	}

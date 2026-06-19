@@ -246,11 +246,8 @@
 							<h2 class="font-display text-lg font-bold tracking-wide text-roast uppercase">{$t('beer.recipe.fermentation')}</h2>
 							{#if recipeData.fermentation}
 								<span class="text-sm text-roast-soft"><span class="font-semibold text-roast">{recipeData.fermentation.tempC} °C</span></span>
-								{#if recipeData.fermentation.lageringTempC != null && recipeData.fermentation.lageringWeeks != null}
-									<span class="text-sm text-roast-soft">{$t('beer.recipe.lager')} <span class="font-semibold text-roast">{recipeData.fermentation.lageringWeeks} {$t('beer.recipe.weeks')}</span> {$t('beer.recipe.at')} <span class="font-semibold text-roast">{recipeData.fermentation.lageringTempC} °C</span></span>
-								{/if}
-								{#if recipeData.fermentation.readyWeeks != null}
-									<span class="text-sm text-roast-soft">{$t('beer.recipe.readyAfter')} <span class="font-semibold text-roast">{recipeData.fermentation.readyWeeks} {$t('beer.recipe.weeks')}</span></span>
+								{#if recipeData.fermentation.attenuationPercent != null}
+									<span class="text-sm text-roast-soft">{$t('beer.recipe.attenuation')} <span class="font-semibold text-roast">{recipeData.fermentation.attenuationPercent}%</span></span>
 								{/if}
 							{/if}
 						</div>
@@ -260,6 +257,21 @@
 							</div>
 						{/if}
 					</section>
+
+					<!-- CONDITIONING -->
+					{#if recipeData.fermentation && ((recipeData.fermentation.lageringTempC != null && recipeData.fermentation.lageringWeeks != null) || recipeData.fermentation.readyWeeks != null)}
+						<section class="overflow-hidden rounded-2xl border border-malt bg-foam/80 shadow-sm">
+							<div class="flex flex-wrap items-baseline gap-x-6 gap-y-1 border-b border-malt bg-malt/30 px-5 py-3">
+								<h2 class="font-display text-lg font-bold tracking-wide text-roast uppercase">{$t('beer.recipe.conditioning')}</h2>
+								{#if recipeData.fermentation.lageringTempC != null && recipeData.fermentation.lageringWeeks != null}
+									<span class="text-sm text-roast-soft">{$t('beer.recipe.lager')} <span class="font-semibold text-roast">{recipeData.fermentation.lageringWeeks} {$t('beer.recipe.weeks')}</span> {$t('beer.recipe.at')} <span class="font-semibold text-roast">{recipeData.fermentation.lageringTempC} °C</span></span>
+								{/if}
+								{#if recipeData.fermentation.readyWeeks != null}
+									<span class="text-sm text-roast-soft">{$t('beer.recipe.readyAfter')} <span class="font-semibold text-roast">{recipeData.fermentation.readyWeeks} {$t('beer.recipe.weeks')}</span></span>
+								{/if}
+							</div>
+						</section>
+					{/if}
 
 				</div>
 			{:else}

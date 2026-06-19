@@ -43,6 +43,7 @@ export interface RecipeFermentation {
 	lageringTempC: number | null;
 	lageringWeeks: number | null;
 	readyWeeks: number | null;
+	attenuationPercent: number | null;
 }
 
 export interface BeerRecipeData {

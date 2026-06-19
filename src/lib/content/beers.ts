@@ -13,22 +13,20 @@ import type {
 } from '$lib/types';
 import { locales, type Locale } from '$lib/i18n/translations';
 
-// Eagerly import every beer markdown file as raw text. Files are named
-// `<slug>.<locale>.md`, e.g. `midsommar-saison.sv.md`.
-const files = import.meta.glob('/src/content/beers/*.md', {
-	query: '?raw',
-	import: 'default',
-	eager: true
-}) as Record<string, string>;
-
-// Optional canonical recipe files, one per beer slug.
+// Optional canonical recipe files, one per beer slug. Each file is the single
+// source of truth: localized prose (`content.<locale>`) plus the recipe data.
 const recipeFiles = import.meta.glob('/src/content/recipes/*.{yml,yaml}', {
 	query: '?raw',
 	import: 'default',
 	eager: true
 }) as Record<string, string>;
 
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
+type LocalizedContent = {
+	name: string;
+	style: string;
+	tagline: string;
+	description: string;
+};
 
 type CanonicalHop = {
 	name: string;
@@ -46,6 +44,7 @@ type CanonicalMalt = {
 };
 
 type CanonicalRecipe = {
+	content?: Partial<Record<Locale, LocalizedContent>>;
 	batchVolumeL: number;
 	mashWaterL?: number;
 	preBoilVolumeL?: number;
@@ -61,6 +60,7 @@ type CanonicalRecipe = {
 		lageringTempC?: number;
 		lageringWeeks?: number;
 		readyWeeks?: number;
+		attenuationPercent?: number;
 	};
 	yeast?: string;
 	builtMeta?: {
@@ -81,13 +81,23 @@ function normalizeStatus(value: unknown): BeerStatus | null {
 	return null;
 }
 
-function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: string } {
-	const match = raw.match(FRONTMATTER);
-	if (!match) {
-		return { data: {}, body: raw };
+function parseLocalizedContent(
+	raw: Record<string, unknown> | undefined
+): Partial<Record<Locale, LocalizedContent>> {
+	const result: Partial<Record<Locale, LocalizedContent>> = {};
+	if (!raw) return result;
+	for (const locale of locales) {
+		const entry = raw[locale];
+		if (typeof entry !== 'object' || entry == null) continue;
+		const item = entry as Record<string, unknown>;
+		result[locale] = {
+			name: String(item.name ?? ''),
+			style: String(item.style ?? ''),
+			tagline: String(item.tagline ?? ''),
+			description: String(item.description ?? '')
+		};
 	}
-	const data = (yaml.load(match[1]) as Record<string, unknown>) ?? {};
-	return { data, body: match[2] };
+	return result;
 }
 
 function numberOrNull(value: unknown): number | null {
@@ -192,7 +202,13 @@ function parseCanonicalRecipes(): Map<string, CanonicalRecipe> {
 				? (data.meta as Record<string, unknown>)
 				: undefined;
 
+		const contentRaw =
+			typeof data.content === 'object' && data.content != null
+				? (data.content as Record<string, unknown>)
+				: undefined;
+
 		result.set(slug, {
+			content: parseLocalizedContent(contentRaw),
 			batchVolumeL,
 			mashWaterL: numberOrNull(data.mashWaterL) ?? undefined,
 			preBoilVolumeL: numberOrNull(data.preBoilVolumeL) ?? undefined,
@@ -225,6 +241,9 @@ function parseCanonicalRecipes(): Map<string, CanonicalRecipe> {
 							: {}),
 						...(numberOrNull(fermentationRaw.readyWeeks) != null
 							? { readyWeeks: numberOrNull(fermentationRaw.readyWeeks)! }
+							: {}),
+						...(numberOrNull(fermentationRaw.attenuationPercent) != null
+							? { attenuationPercent: numberOrNull(fermentationRaw.attenuationPercent)! }
 							: {})
 					}
 				: undefined,
@@ -289,7 +308,8 @@ function toRecipeData(recipe: CanonicalRecipe): BeerRecipeData {
 					tempC: recipe.fermentation.tempC,
 					lageringTempC: recipe.fermentation.lageringTempC ?? null,
 					lageringWeeks: recipe.fermentation.lageringWeeks ?? null,
-					readyWeeks: recipe.fermentation.readyWeeks ?? null
+					readyWeeks: recipe.fermentation.readyWeeks ?? null,
+					attenuationPercent: recipe.fermentation.attenuationPercent ?? null
 				}
 			: null,
 		yeast: recipe.yeast ?? null
@@ -338,58 +358,39 @@ function computeDerivedMeta(recipe: CanonicalRecipe): Pick<BeerMeta, 'abv' | 'ib
 
 // Accepts an `images:` list and/or a single `image:` value, in any order,
 // and returns a de-duplicated list of filenames.
-function parseImages(data: Record<string, unknown>): string[] {
-	const result: string[] = [];
-	if (Array.isArray(data.images)) {
-		for (const item of data.images) {
-			if (item != null) result.push(String(item));
-		}
-	}
-	if (data.image != null) result.push(String(data.image));
-	return [...new Set(result)];
+function parseImages(images: string[] | undefined): string[] {
+	if (!images) return [];
+	return [...new Set(images.map((image) => String(image)))];
 }
 
-function toContent(slug: string, raw: string, canonicalRecipe?: CanonicalRecipe): BeerContent {
-	const { data, body } = parseFrontmatter(raw);
-	const computed = canonicalRecipe ? computeDerivedMeta(canonicalRecipe) : null;
-	const canonicalImages = canonicalRecipe?.builtMeta?.images ?? [];
-	const frontmatterImages = parseImages(data);
-	const mergedImages = [...new Set([...canonicalImages, ...frontmatterImages])];
-	const canonicalBrewed = canonicalRecipe?.builtMeta?.brewed;
-	const canonicalStatus = canonicalRecipe?.builtMeta?.status;
-	const canonicalAvailable = canonicalRecipe?.builtMeta?.available;
-	const canonicalRecipeData = canonicalRecipe ? toRecipeData(canonicalRecipe) : null;
-
-	const frontmatterStatus = normalizeStatus(data.status);
-	const status: BeerStatus =
-		canonicalStatus ??
-		frontmatterStatus ??
-		(canonicalAvailable != null
-			? canonicalAvailable
-				? 'available'
-				: 'archived'
-			: data.available !== false
-				? 'available'
-				: 'archived');
+function toContent(
+	slug: string,
+	locale: Locale,
+	localized: LocalizedContent,
+	canonicalRecipe: CanonicalRecipe
+): BeerContent {
+	const computed = computeDerivedMeta(canonicalRecipe);
+	const images = parseImages(canonicalRecipe.builtMeta?.images);
+	const status: BeerStatus = canonicalRecipe.builtMeta?.status ?? 'planned';
 
 	const meta: BeerMeta = {
 		slug,
-		name: String(data.name ?? slug),
-		style: String(data.style ?? ''),
-		abv: computed?.abv ?? (data.abv != null ? Number(data.abv) : null),
-		ibu: computed?.ibu ?? (data.ibu != null ? Number(data.ibu) : null),
-		ebc: computed?.ebc ?? (data.ebc != null ? Number(data.ebc) : null),
-		og: computed?.og ?? (data.og != null ? Number(data.og) : null),
-		fg: computed?.fg ?? (data.fg != null ? Number(data.fg) : null),
-		brewed: canonicalBrewed ?? (data.brewed != null ? String(data.brewed) : null),
-		images: mergedImages,
-		tagline: String(data.tagline ?? ''),
+		name: localized.name || slug,
+		style: localized.style,
+		abv: computed.abv,
+		ibu: computed.ibu,
+		ebc: computed.ebc,
+		og: computed.og,
+		fg: computed.fg,
+		brewed: canonicalRecipe.builtMeta?.brewed ?? null,
+		images,
+		tagline: localized.tagline,
 		status
 	};
 	return {
 		...meta,
-		recipeHtml: marked.parse(body, { async: false }) as string,
-		recipeData: canonicalRecipeData
+		recipeHtml: marked.parse(localized.description, { async: false }) as string,
+		recipeData: toRecipeData(canonicalRecipe)
 	};
 }
 
@@ -397,35 +398,20 @@ function buildBeers(): Map<string, Beer> {
 	const beers = new Map<string, Beer>();
 	const recipes = parseCanonicalRecipes();
 
-	for (const [path, raw] of Object.entries(files)) {
-		const fileName = path.split('/').pop() ?? '';
-		const nameMatch = fileName.match(/^(.+)\.([a-z]{2})\.md$/);
-		if (!nameMatch) continue;
+	for (const [slug, recipe] of recipes.entries()) {
+		const localizedByLocale = recipe.content ?? {};
+		const images = parseImages(recipe.builtMeta?.images);
+		const beer: Beer = { slug, images, content: {} };
 
-		const [, slug, localeRaw] = nameMatch;
-		const locale = localeRaw as Locale;
-		if (!locales.includes(locale)) continue;
-
-		const content = toContent(slug, raw, recipes.get(slug));
-		const existing = beers.get(slug);
-		if (existing) {
-			existing.content[locale] = content;
-		} else {
-			beers.set(slug, {
-				slug,
-				images: content.images,
-				content: { [locale]: content }
-			});
+		for (const locale of locales) {
+			const localized = localizedByLocale[locale];
+			if (!localized) continue;
+			beer.content[locale] = toContent(slug, locale, localized, recipe);
 		}
-	}
 
-	// Keep images in sync from whichever locale has them.
-	for (const beer of beers.values()) {
-		for (const c of Object.values(beer.content)) {
-			if (c) {
-				if (c.images.length > 0) beer.images = c.images;
-			}
-		}
+		// Skip recipes that have no localized content at all.
+		if (Object.keys(beer.content).length === 0) continue;
+		beers.set(slug, beer);
 	}
 
 	return beers;

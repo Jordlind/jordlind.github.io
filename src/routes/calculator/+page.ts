@@ -12,12 +12,14 @@ export const load: PageLoad = () => {
 			return {
 				slug: beer.slug,
 				name: content.name,
+				style: content.style,
+				tagline: content.tagline,
+				brewed: content.brewed,
+				status: content.status,
 				recipeData: content.recipeData
 			};
 		})
-		.filter(
-			(item): item is { slug: string; name: string; recipeData: NonNullable<typeof item>['recipeData'] } => item !== null
-		);
+		.filter((item): item is NonNullable<typeof item> => item !== null);
 
 	return { recipes };
 };

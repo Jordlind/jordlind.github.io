@@ -1,3 +1,24 @@
+content:
+  sv:
+    name: Oktoberfest
+    style: Märzen / Oktoberfest
+    tagline: Bryggd på våren, lagras över sommaren — ett friskt bavariskt amberlager för hösten.
+    description: |
+      Det här tyska amberlagret bryggas enligt traditionen på våren, lagras i svala källare eller grottor över sommaren, och dricks vid Oktoberfest under hösten.
+
+      Rik maltsmak från Wienermalt och Münchenermalt ger en varm amberfärg och en len, brödig avslutning. Ädla humlen håller beskan ren och diskret.
+
+      > Bäst efter en ordentlig kall lagringsperiod. Tålamod är ingrediensen som gör den riktigt god. 🍺
+  en:
+    name: Oktoberfest
+    style: Märzen / Oktoberfest
+    tagline: Brewed in spring, lagered through summer — a crisp Bavarian amber lager for autumn.
+    description: |
+      This German-style amber lager follows tradition: brewed in the cool of spring, lagered in a cold cellar through the summer months, and enjoyed come autumn at Oktoberfest.
+
+      Rich malt character from Vienna and Munich malts gives it a warm amber colour and a smooth, bready finish. Noble hops keep the bitterness clean and restrained.
+
+      > Best enjoyed after a proper cold lagering period. Patience is the ingredient that makes it great. 🍺
 batchVolumeL: 23
 mashWaterL: 12
 preBoilVolumeL: 27

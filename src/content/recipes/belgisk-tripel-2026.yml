@@ -1,3 +1,24 @@
+content:
+  sv:
+    name: Belgisk Tripel 2026
+    style: Belgisk Tripel
+    tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
+    description: |
+      Tack vare en mindre komplex maltsmak än kusinen Dubbel har belgisk Tripel en frisk, sträv eftersmak. Trots den höga alkoholhalten är smaken inte bedövande – gyllene, pärlande och farligt lättdrucken.
+
+      2026 års sats använder mörkt kandisocker och Tettnanger-humle för en lite jordnärare och fylligare karaktär jämfört med 2025 års version.
+
+      > Stark, gyllene och lurigt mjuk. Skål! 🍺
+  en:
+    name: Belgian Tripel 2026
+    style: Belgian Tripel
+    tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
+    description: |
+      Thanks to a less complex malt character than its cousin the Dubbel, the Belgian Tripel finishes fresh and crisp. Despite the high alcohol it never tastes heavy — golden, sparkling and dangerously easy to drink.
+
+      The 2026 batch uses dark candi sugar and Tettnanger hops for a slightly earthier, richer character compared to the 2025 version.
+
+      > Strong, golden and deceptively gentle. Skål! 🍺
 batchVolumeL: 23
 mashWaterL: 20
 preBoilVolumeL: 25
