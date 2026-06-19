@@ -7,6 +7,7 @@
 		t,
 		activeTool,
 		totalIbu,
+		ibuUseOg,
 		abv,
 		attenuation,
 		color,
@@ -16,6 +17,7 @@
 		t: (key: string) => string;
 		activeTool: ActiveTool;
 		totalIbu: number;
+		ibuUseOg: boolean;
 		abv: number;
 		attenuation: number;
 		color: { ebc: number; srm: number; mcu: number };
@@ -55,7 +57,7 @@
 	<div class="mt-8 rounded-xl border border-malt bg-foam/70 p-4 text-sm text-roast-soft">
 		<h3 class="font-display text-lg font-semibold text-roast">{t('calc.formulaTitle')}</h3>
 		{#if activeTool === 'ibu'}
-			<p class="mt-2">{t('calc.formulaIbu')}</p>
+			<p class="mt-2">{ibuUseOg ? t('calc.formulaIbu') : t('calc.formulaIbuNoOg')}</p>
 		{:else if activeTool === 'abv'}
 			<p class="mt-2">{t('calc.formulaAbv')}</p>
 		{:else if activeTool === 'color'}

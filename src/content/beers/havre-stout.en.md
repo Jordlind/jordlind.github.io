@@ -8,7 +8,7 @@ og: 1049
 fg: 1014
 image: havre-stout.jpg
 tagline: Silky smooth with rich roasted chocolate notes — a comforting winter beer.
-available: true
+available: false
 order: 2
 ---
 

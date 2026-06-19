@@ -1,19 +1,19 @@
 ---
-name: Belgian Tripel 2025
-style: Belgian Tripel
-abv: 9.1
-ibu: 30
-ebc: 11.4
-og: 1080
-fg: 1013
-brewed: 2026-06-14
+name: Belgisk Tripel 2025
+style: Belgisk Tripel
+abv: 7.7
+ibu: 36.2
+ebc: 33.7
+og: 1068
+fg: 1009
+brewed: 2025-01-17
 images:
-  - belgisk-tripel-1.jpg
-  - belgisk-tripel-2.jpg
-  - belgisk-tripel-3.jpg
+  - belgisk-tripel-2025-1.jpg
+  - belgisk-tripel-2025-2.jpg
+  - belgisk-tripel-2025-3.jpg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
-available: true
-order: 1
+available: false
+order: 3
 ---
 
 # Recipe (23 litres)
@@ -24,19 +24,20 @@ golden, sparkling and dangerously easy to drink.
 
 ## Malt
 
-| Malt | Amount | Share |
+| Malt | Mängd | Andel |
 | --- | --- | --- |
-| Belgian pilsner malt | 6.3 kg | 96% |
-| Caramunich I | 250 g | 4% |
+| Pale Ale (5,5-7,5 EBC) | 6 kg | 96% |
+| Chocolate Malt Crisp (450-650 EBC) | 250 g | 96% |
+| Caramünch I (80-100 EBC) | 250 g | 4% |
 
 ## Sugar
 
-- **Belgian light candi sugar** – 1 kg, added in the last 5 minutes of the boil
+- **Light candi sugar** – 1 kg, added in the last 5 minutes of the boil
 
 ## Hops
 
-- **Saaz** (4.2%) – 50 g at the start of the boil (18.6 IBU)
-- **Styrian Goldings** (5.5%) – 50 g in the last 15 minutes (11.7 IBU)
+- **Saaz** (3,9%) – 65 g at the start of the boil (29,2 IBU)
+- **Kent Golding** (5,7%) – 20 g in the last 15 minutes (6,5 IBU)
 
 ## Other
 
@@ -48,18 +49,10 @@ golden, sparkling and dangerously easy to drink.
 
 ## Mash
 
-Mash in at **65 °C** with 16.3 litres and hold for 60 minutes. Boil 27 litres for
-1 hour 10 minutes.
+Mash in at **65 °C** with 16.3 litres and hold for 60 minutes. Boil 27 litres for 1 hour.
 
 ## Fermentation
 
-Ferment at **24 °C**, then lager for 11 weeks at 12 °C. Ready to drink after about
-12 weeks.
-
-## Brewing with malt extract
-
-Steep 250 g of Caramunich I in 27 litres of water at 65 °C for 30 minutes. Remove
-the grain, add 4 kg of light dry malt extract, bring to a boil and add the hops and
-other ingredients in the amounts given in the main recipe.
+Ferment at **24 °C**, then lager for 11 weeks at 12 °C. Ready to drink after about 12 weeks.
 
 > Strong, golden and deceptively gentle. Skål! 🍺

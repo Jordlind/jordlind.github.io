@@ -1,5 +1,5 @@
 ---
-name: Belgisk Tripel
+name: Belgisk Tripel Original
 style: Belgisk Tripel
 abv: 9.1
 ibu: 30
@@ -8,12 +8,10 @@ og: 1080
 fg: 1013
 brewed: 2026-06-14
 images:
-  - belgisk-tripel-1.jpg
-  - belgisk-tripel-2.jpg
-  - belgisk-tripel-3.jpg
+  - amber-beer.svg
 tagline: Lurigt lättdrucken och gyllene – stark, torr och farligt god.
-available: true
-order: 1
+available: false
+order: 4
 ---
 
 # Recept (23 liter)

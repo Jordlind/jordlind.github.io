@@ -8,7 +8,7 @@ og: 1049
 fg: 1014
 image: havre-stout.jpg
 tagline: Len struktur och fylliga rostade chokladsmaker – ett tröstande vinteröl.
-available: true
+available: false
 order: 2
 ---
 

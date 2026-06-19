@@ -109,6 +109,7 @@
 			t={$t}
 			{activeTool}
 			{totalIbu}
+			{ibuUseOg}
 			{abv}
 			{attenuation}
 			{color}

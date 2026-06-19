@@ -1,5 +1,5 @@
 ---
-name: Belgian Tripel
+name: Belgian Tripel Original
 style: Belgian Tripel
 abv: 9.1
 ibu: 30
@@ -8,12 +8,10 @@ og: 1080
 fg: 1013
 brewed: 2026-06-14
 images:
-  - belgisk-tripel-1.jpg
-  - belgisk-tripel-2.jpg
-  - belgisk-tripel-3.jpg
+  - amber-beer.svg
 tagline: Deceptively smooth and golden — strong, dry and dangerously drinkable.
-available: true
-order: 1
+available: false
+order: 4
 ---
 
 # Recipe (23 litres)

@@ -30,10 +30,20 @@
 <h2 class="font-display text-2xl font-semibold text-roast">{t('calc.tool.ibu')}</h2>
 <p class="mt-1 text-sm text-roast-soft">{t('calc.desc.ibu')}</p>
 
-<label class="mt-4 inline-flex items-center gap-2 text-sm text-roast-soft">
-	<input type="checkbox" bind:checked={ibuUseOg} class="h-4 w-4 accent-amber-deep" />
-	{t('calc.ibu.useOg')}
-</label>
+<div class="mt-4 flex items-start gap-2">
+	<label class="inline-flex items-center gap-2 text-sm text-roast-soft">
+		<input type="checkbox" bind:checked={ibuUseOg} class="h-4 w-4 accent-amber-deep" />
+		{t('calc.ibu.useOg')}
+	</label>
+	<button
+		type="button"
+		title={t('calc.ibu.useOgTooltip')}
+		aria-label={t('calc.ibu.useOgTooltip')}
+		class="mt-[1px] shrink-0 text-roast-soft/60 hover:text-roast-soft focus:outline-none"
+	>
+		<Icon name="info" class="size-4" />
+	</button>
+</div>
 
 <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
 	<label class="block">
