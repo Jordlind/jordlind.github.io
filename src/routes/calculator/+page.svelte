@@ -11,6 +11,7 @@
 	import { locale, t } from '$lib/i18n';
 	import RecipeBuilder from '$lib/components/calculator/RecipeBuilder.svelte';
 	import ResultsDashboard from '$lib/components/calculator/ResultsDashboard.svelte';
+	import RecipeExport from '$lib/components/calculator/RecipeExport.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -122,4 +123,6 @@
 
 		<ResultsDashboard t={$t} {metrics} {enabled} {numberFormatter} />
 	</div>
+
+	<RecipeExport t={$t} {recipe} {metrics} {numberFormatter} />
 </section>

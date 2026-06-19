@@ -240,6 +240,13 @@ export const translations: Record<Locale, Dict> = {
 			'Mäsktemperaturen styr vilka sockerarter som bildas. Lägre temp (62–65 °C) ger torrare, mer utjäst öl; högre temp (68–70 °C) ger fylligare öl med högre FG. 67 °C är en neutral mittpunkt.',
 		'calc.build.estimatedHelp':
 			'De här värdena räknas fram automatiskt från maltnotan, effektiviteten, utjäsningsgraden och mäsktemperaturen. Justera fälten ovan så uppdateras OG och FG direkt.',
+		'calc.export.title': 'Exportera recept',
+		'calc.export.intro':
+			'Ladda ner eller kopiera ditt recept. Växla mellan YAML (samma format som webbplatsens recept), JSON eller Markdown.',
+		'calc.export.copy': 'Kopiera',
+		'calc.export.copied': 'Kopierat!',
+		'calc.export.download': 'Ladda ner',
+		'calc.export.recipeHeading': 'Recept',
 
 		'footer.rights': 'Bryggt med kärlek. Drick ansvarsfullt.'
 	},
@@ -477,6 +484,13 @@ export const translations: Record<Locale, Dict> = {
 			'Mash temperature controls which sugars form. Lower temps (62–65 °C) give a drier, more fermentable beer; higher temps (68–70 °C) give a fuller body with a higher FG. 67 °C is a neutral midpoint.',
 		'calc.build.estimatedHelp':
 			'These values are calculated automatically from the grain bill, efficiency, attenuation and mash temperature. Adjust the fields above and the OG and FG update instantly.',
+		'calc.export.title': 'Export recipe',
+		'calc.export.intro':
+			'Download or copy your recipe. Switch between YAML (the same format as the site’s recipes), JSON or Markdown.',
+		'calc.export.copy': 'Copy',
+		'calc.export.copied': 'Copied!',
+		'calc.export.download': 'Download',
+		'calc.export.recipeHeading': 'Recipe',
 
 		'footer.rights': 'Brewed with love. Please drink responsibly.'
 	}

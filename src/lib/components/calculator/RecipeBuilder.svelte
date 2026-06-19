@@ -14,10 +14,13 @@
 	} = $props();
 
 	// Which input sections are relevant for the currently enabled results.
-	const showMalts = $derived(enabled.color || enabled.abv);
 	const showHops = $derived(enabled.ibu);
 	const showGravity = $derived(enabled.abv || enabled.ibu);
 	const showPriming = $derived(enabled.priming);
+	// The grain bill (and mash temp) is also needed when estimating gravity.
+	const showMalts = $derived(
+		enabled.color || enabled.abv || (showGravity && recipe.gravityMode === 'estimate')
+	);
 
 	const estimate = $derived(estimateGravity(recipe));
 
@@ -55,7 +58,7 @@
 	<section>
 		<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.water')}</h3>
 		<p class="mt-1 text-sm text-roast-soft">{t('calc.water.intro')}</p>
-		<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+		<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
 			<label class="block">
 				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 					{t('calc.water.mash')}
@@ -68,21 +71,39 @@
 					{t('calc.water.sparge')}
 					<Tooltip text={t('calc.water.spargeHelp')} />
 				</span>
-				<input type="number" min="0" step="0.1" bind:value={recipe.spargeWaterL} class={inputClass} />
+				<input
+					type="number"
+					min="0"
+					step="0.1"
+					bind:value={recipe.spargeWaterL}
+					class={inputClass}
+				/>
 			</label>
 			<label class="block">
 				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 					{t('calc.water.preBoil')}
 					<Tooltip text={t('calc.water.preBoilHelp')} />
 				</span>
-				<input type="number" min="0" step="0.1" bind:value={recipe.preBoilVolumeL} class={inputClass} />
+				<input
+					type="number"
+					min="0"
+					step="0.1"
+					bind:value={recipe.preBoilVolumeL}
+					class={inputClass}
+				/>
 			</label>
 			<label class="block">
 				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 					{t('calc.water.batch')}
 					<Tooltip text={t('calc.water.batchHelp')} />
 				</span>
-				<input type="number" min="0.1" step="0.1" bind:value={recipe.batchVolumeL} class={inputClass} />
+				<input
+					type="number"
+					min="0.1"
+					step="0.1"
+					bind:value={recipe.batchVolumeL}
+					class={inputClass}
+				/>
 			</label>
 		</div>
 	</section>
@@ -104,18 +125,38 @@
 			</div>
 			<div class="space-y-3">
 				{#each recipe.malts as malt (malt.id)}
-					<div class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_auto] md:items-end">
+					<div
+						class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_auto] md:items-end"
+					>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.fieldName')}</span>
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.fieldName')}</span
+							>
 							<input type="text" bind:value={malt.name} class={smallInputClass} />
 						</label>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltWeight')}</span>
-							<input type="number" min="0" step="0.01" bind:value={malt.weightKg} class={smallInputClass} />
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.maltWeight')}</span
+							>
+							<input
+								type="number"
+								min="0"
+								step="0.01"
+								bind:value={malt.weightKg}
+								class={smallInputClass}
+							/>
 						</label>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltColor')}</span>
-							<input type="number" min="0" step="1" bind:value={malt.colorEbc} class={smallInputClass} />
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.maltColor')}</span
+							>
+							<input
+								type="number"
+								min="0"
+								step="1"
+								bind:value={malt.colorEbc}
+								class={smallInputClass}
+							/>
 						</label>
 						<button
 							type="button"
@@ -133,6 +174,23 @@
 			{#if enabled.color}
 				<p class="mt-2 text-xs text-roast-soft/70">{t('calc.build.colorNote')}</p>
 			{/if}
+
+			<div class="mt-4 max-w-xs">
+				<label class="block">
+					<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+						{t('calc.abv.estimate.mashTemp')}
+						<Tooltip text={t('calc.build.mashTempHelp')} />
+					</span>
+					<input
+						type="number"
+						min="50"
+						max="80"
+						step="0.5"
+						bind:value={recipe.mashTempC}
+						class={inputClass}
+					/>
+				</label>
+			</div>
 		</section>
 	{/if}
 
@@ -154,22 +212,50 @@
 
 			<div class="space-y-3">
 				{#each recipe.hops as hop (hop.id)}
-					<div class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_1fr_auto] md:items-end">
+					<div
+						class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_1fr_auto] md:items-end"
+					>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.fieldName')}</span>
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.fieldName')}</span
+							>
 							<input type="text" bind:value={hop.name} class={smallInputClass} />
 						</label>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.hopAmount')}</span>
-							<input type="number" min="0" step="0.1" bind:value={hop.grams} class={smallInputClass} />
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.hopAmount')}</span
+							>
+							<input
+								type="number"
+								min="0"
+								step="0.1"
+								bind:value={hop.grams}
+								class={smallInputClass}
+							/>
 						</label>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.alphaAcid')}</span>
-							<input type="number" min="0" step="0.1" bind:value={hop.alphaAcidPercent} class={smallInputClass} />
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.alphaAcid')}</span
+							>
+							<input
+								type="number"
+								min="0"
+								step="0.1"
+								bind:value={hop.alphaAcidPercent}
+								class={smallInputClass}
+							/>
 						</label>
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.boilTime')}</span>
-							<input type="number" min="0" step="1" bind:value={hop.boilMinutes} class={smallInputClass} />
+							<span class="mb-1 block text-xs font-medium text-roast-soft"
+								>{t('calc.boilTime')}</span
+							>
+							<input
+								type="number"
+								min="0"
+								step="1"
+								bind:value={hop.boilMinutes}
+								class={smallInputClass}
+							/>
 						</label>
 						<button
 							type="button"
@@ -190,7 +276,9 @@
 	<!-- Gravity & fermentation -->
 	{#if showGravity}
 		<section>
-			<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.gravity')}</h3>
+			<h3 class="font-display text-xl font-semibold text-roast">
+				{t('calc.build.section.gravity')}
+			</h3>
 			<p class="mt-1 text-sm text-roast-soft">{t('calc.build.gravityHelp')}</p>
 
 			<div class="mt-3 inline-flex rounded-lg border border-malt bg-cream p-1 text-sm">
@@ -215,7 +303,7 @@
 			</div>
 
 			{#if recipe.gravityMode === 'manual'}
-				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
 					<label class="block">
 						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 							{t('calc.start')}
@@ -229,51 +317,70 @@
 								{t('calc.final')}
 								<Tooltip text={t('calc.build.fgHelp')} />
 							</span>
-							<input type="number" min="0.99" step="0.001" bind:value={recipe.fg} class={inputClass} />
+							<input
+								type="number"
+								min="0.99"
+								step="0.001"
+								bind:value={recipe.fg}
+								class={inputClass}
+							/>
 						</label>
 					{/if}
 				</div>
 			{:else}
 				<p class="mt-4 text-sm text-roast-soft">{t('calc.build.estimate.intro')}</p>
 
-				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-end">
 					<label class="block">
 						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 							{t('calc.abv.estimate.efficiency')}
 							<Tooltip text={t('calc.build.efficiencyHelp')} />
 						</span>
-						<input type="number" min="40" max="100" step="1" bind:value={recipe.efficiencyPercent} class={inputClass} />
+						<input
+							type="number"
+							min="40"
+							max="100"
+							step="1"
+							bind:value={recipe.efficiencyPercent}
+							class={inputClass}
+						/>
 					</label>
 					<label class="block">
 						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
 							{t('calc.abv.estimate.attenuation')}
 							<Tooltip text={t('calc.build.attenuationHelp')} />
 						</span>
-						<input type="number" min="50" max="100" step="1" bind:value={recipe.yeastAttenuationPercent} class={inputClass} />
-					</label>
-					<label class="block">
-						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
-							{t('calc.abv.estimate.mashTemp')}
-							<Tooltip text={t('calc.build.mashTempHelp')} />
-						</span>
-						<input type="number" min="60" max="72" step="0.5" bind:value={recipe.mashTempC} class={inputClass} />
+						<input
+							type="number"
+							min="50"
+							max="100"
+							step="1"
+							bind:value={recipe.yeastAttenuationPercent}
+							class={inputClass}
+						/>
 					</label>
 				</div>
 
 				<p class="mt-2 text-xs text-roast-soft/70">{t('calc.build.potentialHelp')}</p>
 
-				<div class="mt-4 flex flex-wrap items-center gap-6 rounded-xl border border-malt/80 bg-cream/60 px-4 py-3">
+				<div
+					class="mt-4 flex flex-wrap items-center gap-6 rounded-xl border border-malt/80 bg-cream/60 px-4 py-3"
+				>
 					<div class="text-sm">
 						<span class="flex items-center gap-1 text-roast-soft/70">
 							{t('calc.abv.estimate.estimatedOg')}
 							<Tooltip text={t('calc.build.estimatedHelp')} />
 						</span>
-						<span class="font-display text-xl font-semibold text-amber-deep">{estimate.og.toFixed(3)}</span>
+						<span class="font-display text-xl font-semibold text-amber-deep"
+							>{estimate.og.toFixed(3)}</span
+						>
 					</div>
 					{#if enabled.abv}
 						<div class="text-sm">
 							<span class="block text-roast-soft/70">{t('calc.abv.estimate.estimatedFg')}</span>
-							<span class="font-display text-xl font-semibold text-amber-deep">{estimate.fg.toFixed(3)}</span>
+							<span class="font-display text-xl font-semibold text-amber-deep"
+								>{estimate.fg.toFixed(3)}</span
+							>
 						</div>
 					{/if}
 				</div>
@@ -284,15 +391,29 @@
 	<!-- Priming -->
 	{#if showPriming}
 		<section>
-			<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.priming')}</h3>
-			<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+			<h3 class="font-display text-xl font-semibold text-roast">
+				{t('calc.build.section.priming')}
+			</h3>
+			<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:items-end">
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.temp')}</span>
-					<input type="number" min="0" step="0.1" bind:value={recipe.primingTempC} class={inputClass} />
+					<input
+						type="number"
+						min="0"
+						step="0.1"
+						bind:value={recipe.primingTempC}
+						class={inputClass}
+					/>
 				</label>
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.targetCo2')}</span>
-					<input type="number" min="0" step="0.1" bind:value={recipe.targetCo2Vol} class={inputClass} />
+					<input
+						type="number"
+						min="0"
+						step="0.1"
+						bind:value={recipe.targetCo2Vol}
+						class={inputClass}
+					/>
 				</label>
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.sugarType')}</span>
