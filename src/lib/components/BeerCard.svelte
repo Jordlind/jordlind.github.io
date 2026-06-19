@@ -8,6 +8,13 @@
 	let { beer }: { beer: Beer } = $props();
 
 	const content = $derived(localizedContent(beer, $locale));
+	const statusClass = $derived.by(() => {
+		if (!content) return 'bg-malt text-roast';
+		if (content.status === 'available') return 'bg-hop text-foam';
+		if (content.status === 'planned') return 'bg-amber text-roast';
+		if (content.status === 'archived') return 'bg-roast/80 text-cream';
+		return 'bg-malt text-roast';
+	});
 </script>
 
 {#if content}
@@ -22,11 +29,9 @@
 				imageClass="transition-transform duration-300 group-hover:scale-105"
 			/>
 			<span
-				class="absolute top-3 right-3 z-20 rounded-full px-3 py-1 text-xs font-semibold {content.available
-					? 'bg-hop text-foam'
-					: 'bg-roast/80 text-cream'}"
+				class="absolute top-3 right-3 z-20 rounded-full px-3 py-1 text-xs font-semibold {statusClass}"
 			>
-				{content.available ? $t('beer.available') : $t('beer.soldOut')}
+				{$t(`beer.status.${content.status}`)}
 			</span>
 		</div>
 

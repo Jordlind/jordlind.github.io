@@ -32,8 +32,7 @@ meta:
   brewed: 2026-06-14
   images:
     - amber-beer.svg
-  available: true
-  order: 1
+  status: available
 additions:
   - name: Dark candi sugar
     amount: 1 kg

@@ -38,8 +38,7 @@ meta:
     - belgisk-tripel-2025-1.jpg
     - belgisk-tripel-2025-2.jpg
     - belgisk-tripel-2025-3.jpg
-  available: false
-  order: 3
+  status: archived
 additions:
   - name: Light candi sugar
     amount: 1 kg

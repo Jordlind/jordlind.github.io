@@ -44,10 +44,10 @@ malts:
     colorEbc: 1200
     expectedSharePercent: 1
 meta:
+  brewed: 2025-03-03
   images:
     - havre-stout.jpg
-  available: false
-  order: 2
+  status: archived
 additions:
   - name: Protofloc
     amount: 1 tsp

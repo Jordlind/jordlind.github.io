@@ -74,8 +74,7 @@ meta:
   brewed: 2026-06-14
   images:
     - light-beer.svg
-  available: true
-  order: 1
+  status: available
 ```
 
 When a canonical recipe file exists, ABV/IBU/EBC/OG/FG are automatically computed
@@ -85,15 +84,14 @@ from it and shared by both language pages.
   title. Use `##` for the sections below it (Malt, Hops, …).
 - Numeric brew fields (`abv`, `ibu`, `ebc`, `og`, `fg`) are computed from canonical
   recipe data and should not be added to markdown frontmatter.
-- Shared metadata (`brewed`, `images`/`image`, `available`, `order`) also belongs in
+- Shared metadata (`brewed`, `images`/`image`, `status`) also belongs in
   canonical recipe YAML (`meta:`), not per-language markdown.
 - Use `images:` for a list of photos (a left/right carousel appears automatically
   when there's more than one). A single `image:` value also works. Placeholder
   art is available: `light-beer.svg`, `amber-beer.svg`, `dark-beer.svg` and
   `beer-bottle.svg`.
 - Put image files in `static/beers/` and reference them by filename.
-- `available: false` shows a "Sold out" badge.
-- `order:` controls sort order (lower comes first).
+- `status:` controls lifecycle badges/sections (`available`, `planned`, `archived`, `none`).
 
 ### Edit the About page
 

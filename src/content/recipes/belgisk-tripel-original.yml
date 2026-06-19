@@ -29,11 +29,10 @@ malts:
     colorEbc: 90
     expectedSharePercent: 4
 meta:
-  brewed: 2026-06-14
+  brewed: null
   images:
     - amber-beer.svg
-  available: false
-  order: 4
+  status: archived
 additions:
   - name: Belgian light candi sugar
     amount: 1 kg

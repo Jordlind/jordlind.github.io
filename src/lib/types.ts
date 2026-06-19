@@ -1,5 +1,7 @@
 import type { Locale } from '$lib/i18n/translations';
 
+export type BeerStatus = 'none' | 'available' | 'planned' | 'archived';
+
 export interface RecipeMalt {
 	name: string;
 	weightKg: number;
@@ -69,8 +71,7 @@ export interface BeerMeta {
 	brewed: string | null;
 	images: string[];
 	tagline: string;
-	available: boolean;
-	order: number;
+	status: BeerStatus;
 }
 
 /** A beer's content for a single language: metadata + rendered recipe. */
@@ -82,7 +83,6 @@ export interface BeerContent extends BeerMeta {
 /** A beer aggregated across all available languages. */
 export interface Beer {
 	slug: string;
-	order: number;
 	images: string[];
 	content: Partial<Record<Locale, BeerContent>>;
 }

@@ -11,6 +11,13 @@
 	const content = $derived(localizedContent(data.beer, $locale));
 	const fallback = $derived(isFallback(data.beer, $locale));
 	const recipeData = $derived(content?.recipeData ?? null);
+	const statusClass = $derived.by(() => {
+		if (!content) return 'bg-malt text-roast';
+		if (content.status === 'available') return 'bg-hop text-foam';
+		if (content.status === 'planned') return 'bg-amber text-roast';
+		if (content.status === 'archived') return 'bg-roast/80 text-cream';
+		return 'bg-malt text-roast';
+	});
 
 	function hopAddedAt(boilMinutes: number, boilDurationMin: number | null): string {
 		if (boilMinutes === 0) return $t('beer.recipe.atFlameout');
@@ -61,12 +68,8 @@
 			<div class="flex flex-col">
 				<div class="flex items-center gap-3">
 					<h1 class="font-display text-4xl font-bold text-roast">{content.name}</h1>
-					<span
-						class="rounded-full px-3 py-1 text-xs font-semibold {content.available
-							? 'bg-hop text-foam'
-							: 'bg-roast/80 text-cream'}"
-					>
-						{content.available ? $t('beer.available') : $t('beer.soldOut')}
+					<span class="rounded-full px-3 py-1 text-xs font-semibold {statusClass}">
+						{$t(`beer.status.${content.status}`)}
 					</span>
 				</div>
 

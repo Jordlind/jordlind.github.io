@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import { abvFromOgFg, colorFromMalts, ibuForAddition } from '$lib/calculators/brewing';
 import type {
 	Beer,
+	BeerStatus,
 	BeerContent,
 	BeerMeta,
 	BeerRecipeData,
@@ -65,10 +66,20 @@ type CanonicalRecipe = {
 	builtMeta?: {
 		brewed?: string;
 		images?: string[];
+		status?: BeerStatus;
 		available?: boolean;
-		order?: number;
 	};
 };
+
+function normalizeStatus(value: unknown): BeerStatus | null {
+	if (typeof value !== 'string') return null;
+	const normalized = value.toLowerCase();
+	if (normalized === 'available') return 'available';
+	if (normalized === 'planned') return 'planned';
+	if (normalized === 'archived') return 'archived';
+	if (normalized === 'none') return 'none';
+	return null;
+}
 
 function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: string } {
 	const match = raw.match(FRONTMATTER);
@@ -224,8 +235,10 @@ function parseCanonicalRecipes(): Map<string, CanonicalRecipe> {
 					images: Array.isArray(builtMetaRaw.images)
 						? builtMetaRaw.images.map((image) => String(image))
 						: undefined,
-					available: typeof builtMetaRaw.available === 'boolean' ? builtMetaRaw.available : undefined,
-					order: numberOrNull(builtMetaRaw.order) ?? undefined
+					...(normalizeStatus(builtMetaRaw.status) == null
+						? {}
+						: { status: normalizeStatus(builtMetaRaw.status)! }),
+					available: typeof builtMetaRaw.available === 'boolean' ? builtMetaRaw.available : undefined
 				}
 				: undefined
 		});
@@ -342,10 +355,22 @@ function toContent(slug: string, raw: string, canonicalRecipe?: CanonicalRecipe)
 	const canonicalImages = canonicalRecipe?.builtMeta?.images ?? [];
 	const frontmatterImages = parseImages(data);
 	const mergedImages = [...new Set([...canonicalImages, ...frontmatterImages])];
-	const canonicalOrder = canonicalRecipe?.builtMeta?.order;
 	const canonicalBrewed = canonicalRecipe?.builtMeta?.brewed;
+	const canonicalStatus = canonicalRecipe?.builtMeta?.status;
 	const canonicalAvailable = canonicalRecipe?.builtMeta?.available;
 	const canonicalRecipeData = canonicalRecipe ? toRecipeData(canonicalRecipe) : null;
+
+	const frontmatterStatus = normalizeStatus(data.status);
+	const status: BeerStatus =
+		canonicalStatus ??
+		frontmatterStatus ??
+		(canonicalAvailable != null
+			? canonicalAvailable
+				? 'available'
+				: 'archived'
+			: data.available !== false
+				? 'available'
+				: 'archived');
 
 	const meta: BeerMeta = {
 		slug,
@@ -359,8 +384,7 @@ function toContent(slug: string, raw: string, canonicalRecipe?: CanonicalRecipe)
 		brewed: canonicalBrewed ?? (data.brewed != null ? String(data.brewed) : null),
 		images: mergedImages,
 		tagline: String(data.tagline ?? ''),
-		available: canonicalAvailable ?? data.available !== false,
-		order: canonicalOrder ?? (data.order != null ? Number(data.order) : 999)
+		status
 	};
 	return {
 		...meta,
@@ -389,18 +413,16 @@ function buildBeers(): Map<string, Beer> {
 		} else {
 			beers.set(slug, {
 				slug,
-				order: content.order,
 				images: content.images,
 				content: { [locale]: content }
 			});
 		}
 	}
 
-	// Keep order/images in sync from whichever locale has them.
+	// Keep images in sync from whichever locale has them.
 	for (const beer of beers.values()) {
 		for (const c of Object.values(beer.content)) {
 			if (c) {
-				if (c.order !== 999) beer.order = c.order;
 				if (c.images.length > 0) beer.images = c.images;
 			}
 		}
@@ -412,10 +434,11 @@ function buildBeers(): Map<string, Beer> {
 const beerMap = buildBeers();
 
 function sortBeers(a: Beer, b: Beer): number {
-	if (a.order !== b.order) return a.order - b.order;
 	const aDate = pickAny(a)?.brewed ?? '';
 	const bDate = pickAny(b)?.brewed ?? '';
-	return bDate.localeCompare(aDate);
+	const byDate = bDate.localeCompare(aDate);
+	if (byDate !== 0) return byDate;
+	return a.slug.localeCompare(b.slug);
 }
 
 function pickAny(beer: Beer): BeerContent | undefined {
@@ -425,7 +448,7 @@ function pickAny(beer: Beer): BeerContent | undefined {
 	return undefined;
 }
 
-/** All beers, sorted by `order` then most-recently brewed. */
+/** All beers, sorted by most-recently brewed. */
 export function getAllBeers(): Beer[] {
 	return [...beerMap.values()].sort(sortBeers);
 }

@@ -6,7 +6,7 @@ const rootDir = process.cwd();
 const beersDir = path.join(rootDir, 'src/content/beers');
 const recipesDir = path.join(rootDir, 'src/content/recipes');
 const locales = ['en', 'sv'];
-const forbiddenFrontmatterKeys = ['abv', 'ibu', 'ebc', 'og', 'fg', 'brewed', 'images', 'image', 'available', 'order'];
+const forbiddenFrontmatterKeys = ['abv', 'ibu', 'ebc', 'og', 'fg', 'brewed', 'images', 'image', 'available'];
 
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---/;
 
