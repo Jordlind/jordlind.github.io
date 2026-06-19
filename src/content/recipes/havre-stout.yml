@@ -3,6 +3,11 @@ mashWaterL: 12.2
 preBoilVolumeL: 27
 og: 1049
 fg: 1014
+mash:
+  tempC: 67
+  durationMin: 60
+boil:
+  durationMin: 70
 hops:
   - name: Challenger
     grams: 39
@@ -43,3 +48,13 @@ meta:
     - havre-stout.jpg
   available: false
   order: 2
+additions:
+  - name: Protofloc
+    amount: 1 tsp
+    addAt: last 15 min of boil
+fermentation:
+  tempC: 20
+  lageringTempC: 12
+  lageringWeeks: 4
+  readyWeeks: 5
+yeast: Wyeast 1187 Ringwood Ale

@@ -20,60 +20,60 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+	const selectedRecipeSlug = $derived(data.requestedSlug ?? '');
 
 	type ToolId = 'ibu' | 'abv' | 'color' | 'priming';
-
-	const prefillRecipe = data.prefill?.recipeData ?? null;
 
 	function gravityToSg(value: number): number {
 		if (value >= 1000) return value / 1000;
 		return value;
 	}
 
-	const initialBatchVolumeL = prefillRecipe?.water.batchVolumeL ?? 20;
-	const initialIbuGravity = prefillRecipe ? gravityToSg(prefillRecipe.og) : 1.05;
-	const initialAbvOg = prefillRecipe ? gravityToSg(prefillRecipe.og) : 1.058;
-	const initialAbvFg = prefillRecipe ? gravityToSg(prefillRecipe.fg) : 1.012;
+	let activeTool = $state<ToolId>('ibu');
 
-	const initialAdditions =
-		prefillRecipe?.hops.map((hop, index) => ({
+	let batchVolumeL = $state(20);
+	let ibuGravity = $state(1.05);
+	let ibuUseOg = $state(true);
+	let abvOg = $state(1.058);
+	let abvFg = $state(1.012);
+	let primingTempC = $state(20);
+	let targetCo2Vol = $state(2.4);
+	let sugarType = $state<PrimingSugarType>('dextrose');
+
+	let additions = $state<HopAddition[]>([
+		{ id: 1, grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }
+	]);
+	let malts = $state<MaltAddition[]>([
+		{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
+		{ id: 2, name: 'Munchnermalt', weightKg: 0.7, colorEbc: 18 }
+	]);
+
+	$effect(() => {
+		const recipe = data.prefill?.recipeData ?? null;
+		if (!recipe) return;
+
+		batchVolumeL = recipe.water.batchVolumeL;
+		ibuGravity = gravityToSg(recipe.og);
+		abvOg = gravityToSg(recipe.og);
+		abvFg = gravityToSg(recipe.fg);
+
+		additions = recipe.hops.map((hop, index) => ({
 			id: index + 1,
 			grams: hop.grams,
 			alphaAcidPercent: hop.alphaAcidPercent,
 			boilMinutes: hop.boilMinutes
-		})) ?? [{ id: 1, grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }];
+		}));
 
-	const prefilledMalts =
-		prefillRecipe?.malts
+		const prefillMalts = recipe.malts
 			.filter((malt) => malt.colorEbc != null)
 			.map((malt, index) => ({
 				id: index + 1,
 				name: malt.name,
 				weightKg: malt.weightKg,
 				colorEbc: malt.colorEbc ?? 0
-			})) ?? [];
-
-	const initialMalts =
-		prefilledMalts.length > 0
-			? prefilledMalts
-			: [
-					{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
-					{ id: 2, name: 'Munchnermalt', weightKg: 0.7, colorEbc: 18 }
-				];
-
-	let activeTool = $state<ToolId>('ibu');
-
-	let batchVolumeL = $state(initialBatchVolumeL);
-	let ibuGravity = $state(initialIbuGravity);
-	let ibuUseOg = $state(true);
-	let abvOg = $state(initialAbvOg);
-	let abvFg = $state(initialAbvFg);
-	let primingTempC = $state(20);
-	let targetCo2Vol = $state(2.4);
-	let sugarType = $state<PrimingSugarType>('dextrose');
-
-	let additions = $state<HopAddition[]>(initialAdditions);
-	let malts = $state<MaltAddition[]>(initialMalts);
+			}));
+		if (prefillMalts.length > 0) malts = prefillMalts;
+	});
 
 	const tools = $derived([
 		{ id: 'ibu' as const, label: $t('calc.tool.ibu') },
@@ -123,6 +123,28 @@
 			<p class="text-xs tracking-[0.2em] text-cream/70 uppercase">Jordlind Lab</p>
 			<h1 class="mt-2 font-display text-4xl font-bold text-cream">{$t('calc.title')}</h1>
 			<p class="mt-3 max-w-2xl text-cream/80">{$t('calc.subtitle')}</p>
+
+			<form method="GET" action="" class="mt-4 flex flex-wrap items-end gap-3">
+				<label class="min-w-56">
+					<span class="mb-1 block text-xs tracking-[0.12em] text-cream/70 uppercase">{$t('calc.import.label')}</span>
+					<select
+						name="beer"
+						class="w-full rounded-lg border border-cream/30 bg-cream/10 px-3 py-2 text-sm text-cream focus:border-amber focus:ring-2 focus:ring-amber/50 focus:outline-none"
+					>
+						<option value="">{$t('calc.import.placeholder')}</option>
+						{#each data.recipes as recipe}
+							<option value={recipe.slug} selected={selectedRecipeSlug === recipe.slug}>{recipe.name}</option>
+						{/each}
+					</select>
+				</label>
+				<button
+					type="submit"
+					class="rounded-full border border-amber px-4 py-2 text-sm font-semibold text-cream transition hover:bg-amber hover:text-roast"
+				>
+					{$t('calc.import.button')}
+				</button>
+			</form>
+
 			{#if data.prefill}
 				<p class="mt-4 inline-flex items-center gap-2 rounded-full border border-amber/50 bg-amber/20 px-4 py-1 text-sm text-cream">
 					{$t('calc.prefilledFromBeer')}: {data.prefill.name}

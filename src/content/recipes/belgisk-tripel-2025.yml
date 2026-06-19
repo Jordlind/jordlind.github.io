@@ -3,6 +3,11 @@ mashWaterL: 16.3
 preBoilVolumeL: 27
 og: 1068
 fg: 1009
+mash:
+  tempC: 65
+  durationMin: 60
+boil:
+  durationMin: 60
 hops:
   - name: Saaz
     grams: 65
@@ -35,3 +40,16 @@ meta:
     - belgisk-tripel-2025-3.jpg
   available: false
   order: 3
+additions:
+  - name: Light candi sugar
+    amount: 1 kg
+    addAt: last 5 min of boil
+  - name: Protofloc
+    amount: 1 tsp
+    addAt: last 15 min of boil
+fermentation:
+  tempC: 24
+  lageringTempC: 12
+  lageringWeeks: 11
+  readyWeeks: 12
+yeast: Wyeast 1388 Belgian Strong Ale

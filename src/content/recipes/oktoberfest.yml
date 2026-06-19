@@ -1,0 +1,53 @@
+batchVolumeL: 23
+mashWaterL: 12
+preBoilVolumeL: 27
+og: 1057
+fg: 1017
+mash:
+  tempC: 65
+  durationMin: 60
+boil:
+  durationMin: 75
+hops:
+  - name: Perle
+    grams: 27
+    alphaAcidPercent: 8.0
+    boilMinutes: 75
+    expectedIbu: 23.1
+  - name: Hallertauer Mittelfrüh
+    grams: 5
+    alphaAcidPercent: 5.0
+    boilMinutes: 30
+    expectedIbu: 2.1
+malts:
+  - name: Vienna Malt
+    weightKg: 4
+    colorEbc: 9
+    expectedSharePercent: 73
+  - name: Munich Malt
+    weightKg: 0.8
+    colorEbc: 18
+    expectedSharePercent: 15
+  - name: Carapils
+    weightKg: 0.75
+    colorEbc: 5
+    expectedSharePercent: 14
+  - name: Caramel Malt
+    weightKg: 0.1
+    colorEbc: 120
+    expectedSharePercent: 2
+additions:
+  - name: Protofloc
+    amount: 1 tsp
+    addAt: last 15 min of boil
+fermentation:
+  tempC: 12
+  lageringTempC: 3
+  lageringWeeks: 4
+  readyWeeks: 5
+yeast: Whitelabs WLP820 Oktoberfest
+meta:
+  images:
+    - amber-beer.svg
+  available: false
+  order: 5

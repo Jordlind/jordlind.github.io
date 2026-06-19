@@ -1,7 +1,15 @@
 import yaml from 'js-yaml';
 import { marked } from 'marked';
 import { abvFromOgFg, colorFromMalts, ibuForAddition } from '$lib/calculators/brewing';
-import type { Beer, BeerContent, BeerMeta, BeerRecipeData, RecipeHop, RecipeMalt } from '$lib/types';
+import type {
+	Beer,
+	BeerContent,
+	BeerMeta,
+	BeerRecipeData,
+	RecipeAddition,
+	RecipeHop,
+	RecipeMalt
+} from '$lib/types';
 import { locales, type Locale } from '$lib/i18n/translations';
 
 // Eagerly import every beer markdown file as raw text. Files are named
@@ -42,8 +50,18 @@ type CanonicalRecipe = {
 	preBoilVolumeL?: number;
 	og: number;
 	fg: number;
+	mash?: { tempC: number; durationMin: number };
+	boil?: { durationMin: number };
 	hops: CanonicalHop[];
 	malts: CanonicalMalt[];
+	additions: { name: string; amount: string; addAt?: string }[];
+	fermentation?: {
+		tempC: number;
+		lageringTempC?: number;
+		lageringWeeks?: number;
+		readyWeeks?: number;
+	};
+	yeast?: string;
 	builtMeta?: {
 		brewed?: string;
 		images?: string[];
@@ -130,6 +148,34 @@ function parseCanonicalRecipes(): Map<string, CanonicalRecipe> {
 			})
 			.filter((malt): malt is CanonicalMalt => malt !== null);
 
+		const additionsRaw = Array.isArray(data.additions) ? data.additions : [];
+		const additions = additionsRaw
+			.map((addition) => {
+				const item = (addition as Record<string, unknown>) ?? {};
+				if (!item.name) return null;
+				return {
+					name: String(item.name),
+					amount: String(item.amount ?? ''),
+					...(item.addAt != null ? { addAt: String(item.addAt) } : {})
+				};
+			})
+			.filter((a): a is { name: string; amount: string; addAt?: string } => a !== null);
+
+		const mashRaw =
+			typeof data.mash === 'object' && data.mash != null
+				? (data.mash as Record<string, unknown>)
+				: undefined;
+
+		const boilRaw =
+			typeof data.boil === 'object' && data.boil != null
+				? (data.boil as Record<string, unknown>)
+				: undefined;
+
+		const fermentationRaw =
+			typeof data.fermentation === 'object' && data.fermentation != null
+				? (data.fermentation as Record<string, unknown>)
+				: undefined;
+
 		const builtMetaRaw =
 			typeof data.meta === 'object' && data.meta != null
 				? (data.meta as Record<string, unknown>)
@@ -143,6 +189,35 @@ function parseCanonicalRecipes(): Map<string, CanonicalRecipe> {
 			fg,
 			hops,
 			malts,
+			additions,
+			mash:
+				mashRaw &&
+				numberOrNull(mashRaw.tempC) != null &&
+				numberOrNull(mashRaw.durationMin) != null
+					? {
+							tempC: numberOrNull(mashRaw.tempC)!,
+							durationMin: numberOrNull(mashRaw.durationMin)!
+						}
+					: undefined,
+			boil:
+				boilRaw && numberOrNull(boilRaw.durationMin) != null
+					? { durationMin: numberOrNull(boilRaw.durationMin)! }
+					: undefined,
+			fermentation: fermentationRaw && numberOrNull(fermentationRaw.tempC) != null
+				? {
+						tempC: numberOrNull(fermentationRaw.tempC)!,
+						...(numberOrNull(fermentationRaw.lageringTempC) != null
+							? { lageringTempC: numberOrNull(fermentationRaw.lageringTempC)! }
+							: {}),
+						...(numberOrNull(fermentationRaw.lageringWeeks) != null
+							? { lageringWeeks: numberOrNull(fermentationRaw.lageringWeeks)! }
+							: {}),
+						...(numberOrNull(fermentationRaw.readyWeeks) != null
+							? { readyWeeks: numberOrNull(fermentationRaw.readyWeeks)! }
+							: {})
+					}
+				: undefined,
+			yeast: data.yeast != null ? String(data.yeast) : undefined,
 			builtMeta: builtMetaRaw
 				? {
 					brewed: builtMetaRaw.brewed != null ? String(builtMetaRaw.brewed) : undefined,
@@ -175,6 +250,12 @@ function toRecipeData(recipe: CanonicalRecipe): BeerRecipeData {
 		expectedIbu: hop.expectedIbu ?? null
 	}));
 
+	const additions: RecipeAddition[] = recipe.additions.map((a) => ({
+		name: a.name,
+		amount: a.amount,
+		addAt: a.addAt ?? null
+	}));
+
 	return {
 		og: toGravityPoints(recipe.og),
 		fg: toGravityPoints(recipe.fg),
@@ -183,8 +264,22 @@ function toRecipeData(recipe: CanonicalRecipe): BeerRecipeData {
 			mashWaterL: recipe.mashWaterL ?? null,
 			preBoilVolumeL: recipe.preBoilVolumeL ?? null
 		},
+		mash: recipe.mash
+			? { tempC: recipe.mash.tempC, durationMin: recipe.mash.durationMin }
+			: null,
+		boil: recipe.boil ? { durationMin: recipe.boil.durationMin } : null,
 		malts,
-		hops
+		hops,
+		additions,
+		fermentation: recipe.fermentation
+			? {
+					tempC: recipe.fermentation.tempC,
+					lageringTempC: recipe.fermentation.lageringTempC ?? null,
+					lageringWeeks: recipe.fermentation.lageringWeeks ?? null,
+					readyWeeks: recipe.fermentation.readyWeeks ?? null
+				}
+			: null,
+		yeast: recipe.yeast ?? null
 	};
 }
 

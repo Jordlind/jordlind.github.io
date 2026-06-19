@@ -3,6 +3,11 @@ mashWaterL: 20
 preBoilVolumeL: 25
 og: 1080
 fg: 1013
+mash:
+  tempC: 65
+  durationMin: 60
+boil:
+  durationMin: 60
 hops:
   - name: Saaz
     grams: 50
@@ -29,3 +34,16 @@ meta:
     - amber-beer.svg
   available: true
   order: 1
+additions:
+  - name: Dark candi sugar
+    amount: 1 kg
+    addAt: last 5 min of boil
+  - name: Protofloc
+    amount: 1 tsp
+    addAt: last 15 min of boil
+fermentation:
+  tempC: 24
+  lageringTempC: 12
+  lageringWeeks: 11
+  readyWeeks: 12
+yeast: Wyeast 1388 Belgian Strong Ale

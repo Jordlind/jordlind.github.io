@@ -21,12 +21,39 @@ export interface RecipeWaterProfile {
 	preBoilVolumeL: number | null;
 }
 
+export interface RecipeMash {
+	tempC: number;
+	durationMin: number;
+}
+
+export interface RecipeBoil {
+	durationMin: number;
+}
+
+export interface RecipeAddition {
+	name: string;
+	amount: string;
+	addAt: string | null;
+}
+
+export interface RecipeFermentation {
+	tempC: number;
+	lageringTempC: number | null;
+	lageringWeeks: number | null;
+	readyWeeks: number | null;
+}
+
 export interface BeerRecipeData {
 	og: number;
 	fg: number;
 	water: RecipeWaterProfile;
+	mash: RecipeMash | null;
+	boil: RecipeBoil | null;
 	malts: RecipeMalt[];
 	hops: RecipeHop[];
+	additions: RecipeAddition[];
+	fermentation: RecipeFermentation | null;
+	yeast: string | null;
 }
 
 /** Structured data parsed from a beer markdown file's frontmatter. */
