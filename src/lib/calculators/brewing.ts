@@ -64,6 +64,110 @@ export function abvFromOgFg(og: number, fg: number): number {
 	return Math.max(0, (safeOg - safeFg) * 131.25);
 }
 
+export type FermentableType = 'base' | 'viennaMunich' | 'crystal' | 'flaked' | 'sugar';
+
+export type Fermentable = {
+	id: number;
+	name: string;
+	weightKg: number;
+	type: FermentableType;
+};
+
+/**
+ * Simplified extract potential per fermentable type, expressed as gravity
+ * points per kg per litre (GP/kg/L). Sugar dissolves fully so it bypasses
+ * the mash efficiency that applies to grains.
+ */
+const FERMENTABLE_PROFILE: Record<FermentableType, { potential: number; mashable: boolean }> = {
+	base: { potential: 300, mashable: true },
+	viennaMunich: { potential: 295, mashable: true },
+	crystal: { potential: 280, mashable: true },
+	flaked: { potential: 300, mashable: true },
+	sugar: { potential: 385, mashable: false }
+};
+
+export function fermentablePotential(type: FermentableType): number {
+	return FERMENTABLE_PROFILE[type].potential;
+}
+
+/** Gravity points contributed by a single fermentable to the batch. */
+export function fermentableGravityPoints(
+	fermentable: Fermentable,
+	efficiencyPercent: number,
+	volumeL: number
+): number {
+	const safeVolume = Math.max(0.0001, volumeL);
+	const weightKg = clampPositive(fermentable.weightKg);
+	const { potential, mashable } = FERMENTABLE_PROFILE[fermentable.type];
+	const efficiency = mashable ? clampPositive(efficiencyPercent) / 100 : 1;
+	return (weightKg * potential * efficiency) / safeVolume;
+}
+
+export function estimateOgFromGrainBill(
+	fermentables: Fermentable[],
+	efficiencyPercent: number,
+	volumeL: number
+): number {
+	const points = fermentables.reduce(
+		(sum, fermentable) => sum + fermentableGravityPoints(fermentable, efficiencyPercent, volumeL),
+		0
+	);
+	return 1 + points / 1000;
+}
+
+/**
+ * Mash temperature correction to apparent attenuation, in percentage points.
+ * Cooler mashes are more fermentable (higher attenuation); hotter mashes leave
+ * more residual sugars. Calibrated around a neutral 67 °C.
+ */
+export function mashTempAttenuationAdjustment(tempC: number): number {
+	if (Number.isNaN(tempC)) return 0;
+	const delta = 67 - tempC;
+	const adjustment = tempC <= 67 ? delta : delta * 2;
+	return Math.max(-10, Math.min(6, adjustment));
+}
+
+/**
+ * Attenuation reduction (percentage points) when crystal/caramel malt makes up
+ * more than 10 % of the grain bill: roughly −2 % for every extra 5 % share.
+ */
+export function crystalAttenuationAdjustment(fermentables: Fermentable[]): number {
+	const totalWeight = fermentables.reduce((sum, f) => sum + clampPositive(f.weightKg), 0);
+	if (totalWeight <= 0) return 0;
+	const crystalWeight = fermentables
+		.filter((f) => f.type === 'crystal')
+		.reduce((sum, f) => sum + clampPositive(f.weightKg), 0);
+	const crystalShare = crystalWeight / totalWeight;
+	if (crystalShare <= 0.1) return 0;
+	const steps = (crystalShare - 0.1) / 0.05;
+	return -(steps * 2);
+}
+
+export function estimateRecipeAbv(params: {
+	fermentables: Fermentable[];
+	efficiencyPercent: number;
+	volumeL: number;
+	baseAttenuationPercent: number;
+	mashTempC: number;
+}): { og: number; fg: number; abv: number; attenuation: number } {
+	const og = estimateOgFromGrainBill(params.fermentables, params.efficiencyPercent, params.volumeL);
+	const ogPoints = (og - 1) * 1000;
+	const attenuation = Math.max(
+		0,
+		Math.min(
+			100,
+			clampPositive(params.baseAttenuationPercent) +
+				mashTempAttenuationAdjustment(params.mashTempC) +
+				crystalAttenuationAdjustment(params.fermentables)
+		)
+	);
+	const fgPoints = ogPoints * (1 - attenuation / 100);
+	const fg = 1 + fgPoints / 1000;
+	const abv = abvFromOgFg(og, fg);
+
+	return { og, fg, abv, attenuation };
+}
+
 export function apparentAttenuation(og: number, fg: number): number {
 	const points = Math.max(0.0001, (og - 1) * 1000);
 	const consumed = Math.max(0, (og - fg) * 1000);

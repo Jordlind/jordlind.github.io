@@ -2,106 +2,43 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import {
-		abvFromOgFg,
-		apparentAttenuation,
-		colorFromMalts,
-		ibuForAddition,
-		ibuForAdditionNoGravity,
-		primingSugarGrams,
-		type HopAddition,
-		type MaltAddition,
-		type PrimingSugarType
-	} from '$lib/calculators/brewing';
+		computeRecipeMetrics,
+		createDefaultRecipe,
+		recipeFromBeerData,
+		type BuilderRecipe,
+		type MetricId
+	} from '$lib/calculators/recipe';
 	import { locale, t } from '$lib/i18n';
-	import ToolTabs from '$lib/components/calculator/ToolTabs.svelte';
-	import IbuTool from '$lib/components/calculator/IbuTool.svelte';
-	import AbvTool from '$lib/components/calculator/AbvTool.svelte';
-	import ColorTool from '$lib/components/calculator/ColorTool.svelte';
-	import PrimingTool from '$lib/components/calculator/PrimingTool.svelte';
-	import ResultsPanel from '$lib/components/calculator/ResultsPanel.svelte';
+	import RecipeBuilder from '$lib/components/calculator/RecipeBuilder.svelte';
+	import ResultsDashboard from '$lib/components/calculator/ResultsDashboard.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const selectedRecipeSlug = $derived(browser ? page.url.searchParams.get('beer')?.trim() ?? '' : '');
 	const selectedRecipe = $derived(data.recipes.find((recipe) => recipe.slug === selectedRecipeSlug) ?? null);
 
-	type ToolId = 'ibu' | 'abv' | 'color' | 'priming';
+	let recipe = $state<BuilderRecipe>(createDefaultRecipe());
+	let enabled = $state<Record<MetricId, boolean>>({ abv: true, ibu: true, color: true, priming: true });
 
-	function gravityToSg(value: number): number {
-		if (value >= 1000) return value / 1000;
-		return value;
-	}
-
-	let activeTool = $state<ToolId>('ibu');
-
-	let batchVolumeL = $state(20);
-	let ibuGravity = $state(1.05);
-	let ibuUseOg = $state(true);
-	let abvOg = $state(1.058);
-	let abvFg = $state(1.012);
-	let primingTempC = $state(20);
-	let targetCo2Vol = $state(2.4);
-	let sugarType = $state<PrimingSugarType>('dextrose');
-
-	let additions = $state<HopAddition[]>([
-		{ id: 1, grams: 20, alphaAcidPercent: 10, boilMinutes: 60 }
-	]);
-	let malts = $state<MaltAddition[]>([
-		{ id: 1, name: 'Pilsnermalt', weightKg: 4.8, colorEbc: 4 },
-		{ id: 2, name: 'Munchnermalt', weightKg: 0.7, colorEbc: 18 }
-	]);
-
+	// Import a canonical beer recipe into the builder when ?beer=<slug> is set.
 	$effect(() => {
-		const recipe = selectedRecipe?.recipeData ?? null;
-		if (!recipe) return;
-
-		batchVolumeL = recipe.water.batchVolumeL;
-		ibuGravity = gravityToSg(recipe.og);
-		abvOg = gravityToSg(recipe.og);
-		abvFg = gravityToSg(recipe.fg);
-
-		additions = recipe.hops.map((hop, index) => ({
-			id: index + 1,
-			grams: hop.grams,
-			alphaAcidPercent: hop.alphaAcidPercent,
-			boilMinutes: hop.boilMinutes
-		}));
-
-		const prefillMalts = recipe.malts
-			.filter((malt) => malt.colorEbc != null)
-			.map((malt, index) => ({
-				id: index + 1,
-				name: malt.name,
-				weightKg: malt.weightKg,
-				colorEbc: malt.colorEbc ?? 0
-			}));
-		if (prefillMalts.length > 0) malts = prefillMalts;
+		const recipeData = selectedRecipe?.recipeData;
+		if (!recipeData) return;
+		recipe = recipeFromBeerData(recipeData);
 	});
 
-	const tools = $derived([
-		{ id: 'ibu' as const, label: $t('calc.tool.ibu') },
+	function toggleMetric(id: MetricId) {
+		enabled[id] = !enabled[id];
+	}
+
+	const metricChips = $derived([
 		{ id: 'abv' as const, label: $t('calc.tool.abv') },
+		{ id: 'ibu' as const, label: $t('calc.tool.ibu') },
 		{ id: 'color' as const, label: $t('calc.tool.color') },
 		{ id: 'priming' as const, label: $t('calc.tool.priming') }
 	]);
 
-	const totalIbu = $derived(
-		additions.reduce((sum, addition) => {
-			return sum + (ibuUseOg ? ibuForAddition(addition, ibuGravity, batchVolumeL) : ibuForAdditionNoGravity(addition, batchVolumeL));
-		}, 0)
-	);
-
-	const abv = $derived(abvFromOgFg(abvOg, abvFg));
-	const attenuation = $derived(apparentAttenuation(abvOg, abvFg));
-	const color = $derived(colorFromMalts(malts, batchVolumeL));
-	const priming = $derived(
-		primingSugarGrams({
-			volumeL: batchVolumeL,
-			targetCo2Vol,
-			beerTempC: primingTempC,
-			sugarType
-		})
-	);
+	const metrics = $derived(computeRecipeMetrics(recipe));
 
 	const numberFormatter = $derived(
 		new Intl.NumberFormat($locale === 'sv' ? 'sv-SE' : 'en-US', {
@@ -125,7 +62,7 @@
 		<div class="relative">
 			<p class="text-xs tracking-[0.2em] text-cream/70 uppercase">Jordlind Lab</p>
 			<h1 class="mt-2 font-display text-4xl font-bold text-cream">{$t('calc.title')}</h1>
-			<p class="mt-3 max-w-2xl text-cream/80">{$t('calc.subtitle')}</p>
+			<p class="mt-3 max-w-2xl text-cream/80">{$t('calc.build.subtitle')}</p>
 
 			<form method="GET" action="" class="mt-4 flex flex-wrap items-end gap-3">
 				<label class="min-w-56">
@@ -135,8 +72,8 @@
 						class="w-full rounded-lg border border-cream/30 bg-cream/10 px-3 py-2 text-sm text-cream focus:border-amber focus:ring-2 focus:ring-amber/50 focus:outline-none"
 					>
 						<option value="">{$t('calc.import.placeholder')}</option>
-						{#each data.recipes as recipe}
-							<option value={recipe.slug} selected={selectedRecipeSlug === recipe.slug}>{recipe.name}</option>
+						{#each data.recipes as recipeOption (recipeOption.slug)}
+							<option value={recipeOption.slug} selected={selectedRecipeSlug === recipeOption.slug}>{recipeOption.name}</option>
 						{/each}
 					</select>
 				</label>
@@ -160,30 +97,34 @@
 		</div>
 	</div>
 
+	<div class="mb-8 rounded-2xl border border-malt bg-foam p-5">
+		<p class="mb-3 text-xs font-semibold tracking-wide text-roast-soft uppercase">{$t('calc.build.whatToCalc')}</p>
+		<div class="flex flex-wrap gap-2">
+			{#each metricChips as chip (chip.id)}
+				<button
+					type="button"
+					onclick={() => toggleMetric(chip.id)}
+					aria-pressed={enabled[chip.id]}
+					class="rounded-full border px-4 py-2 text-sm font-semibold transition-colors {enabled[chip.id]
+						? 'border-amber-deep bg-amber-deep text-foam'
+						: 'border-malt bg-cream text-roast-soft hover:border-amber hover:text-roast'}"
+				>
+					{chip.label}
+				</button>
+			{/each}
+		</div>
+	</div>
+
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 		<div class="rounded-2xl border border-malt bg-foam p-6 shadow-sm lg:col-span-2">
-			<ToolTabs label={$t('calc.tools')} bind:activeTool {tools} />
-
-			{#if activeTool === 'ibu'}
-				<IbuTool t={$t} bind:batchVolumeL bind:ibuGravity bind:ibuUseOg bind:additions />
-			{:else if activeTool === 'abv'}
-				<AbvTool t={$t} bind:abvOg bind:abvFg />
-			{:else if activeTool === 'color'}
-				<ColorTool t={$t} bind:batchVolumeL bind:malts />
-			{:else}
-				<PrimingTool t={$t} bind:batchVolumeL bind:primingTempC bind:targetCo2Vol bind:sugarType />
-			{/if}
+			<RecipeBuilder t={$t} bind:recipe {enabled} />
 		</div>
 
-		<ResultsPanel
+		<ResultsDashboard
 			t={$t}
-			{activeTool}
-			{totalIbu}
-			{ibuUseOg}
-			{abv}
-			{attenuation}
-			{color}
-			{priming}
+			{metrics}
+			{enabled}
+			useOgForIbu={recipe.useOgForIbu}
 			{numberFormatter}
 		/>
 	</div>
