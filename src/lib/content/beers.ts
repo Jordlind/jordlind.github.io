@@ -1,6 +1,7 @@
 import yaml from 'js-yaml';
 import { marked } from 'marked';
 import { abvFromOgFg, colorFromMalts, ibuForAddition } from '$lib/calculators/brewing';
+import { closestEbcEntry } from '$lib/beerColor';
 import type {
 	Beer,
 	BeerStatus,
@@ -356,10 +357,18 @@ function computeDerivedMeta(recipe: CanonicalRecipe): Pick<BeerMeta, 'abv' | 'ib
 	};
 }
 
+function fallbackImageForEbc(ebc: number | null): string {
+	if (ebc == null) return 'placeholders/beer-bottle.svg';
+	const closest = closestEbcEntry(ebc);
+	return `placeholders/placeholder-ebc-${String(closest.ebc).padStart(3, '0')}.svg`;
+}
+
 // Accepts an `images:` list and/or a single `image:` value, in any order,
 // and returns a de-duplicated list of filenames.
-function parseImages(images: string[] | undefined): string[] {
-	if (!images) return [];
+function parseImages(images: string[] | undefined, fallbackEbc: number | null): string[] {
+	if (!images || images.length === 0) {
+		return [fallbackImageForEbc(fallbackEbc)];
+	}
 	return [...new Set(images.map((image) => String(image)))];
 }
 
@@ -367,10 +376,10 @@ function toContent(
 	slug: string,
 	locale: Locale,
 	localized: LocalizedContent,
-	canonicalRecipe: CanonicalRecipe
+	canonicalRecipe: CanonicalRecipe,
+	computed: Pick<BeerMeta, 'abv' | 'ibu' | 'ebc' | 'og' | 'fg'>,
+	images: string[]
 ): BeerContent {
-	const computed = computeDerivedMeta(canonicalRecipe);
-	const images = parseImages(canonicalRecipe.builtMeta?.images);
 	const status: BeerStatus = canonicalRecipe.builtMeta?.status ?? 'planned';
 
 	const meta: BeerMeta = {
@@ -400,13 +409,14 @@ function buildBeers(): Map<string, Beer> {
 
 	for (const [slug, recipe] of recipes.entries()) {
 		const localizedByLocale = recipe.content ?? {};
-		const images = parseImages(recipe.builtMeta?.images);
+		const computed = computeDerivedMeta(recipe);
+		const images = parseImages(recipe.builtMeta?.images, computed.ebc);
 		const beer: Beer = { slug, images, content: {} };
 
 		for (const locale of locales) {
 			const localized = localizedByLocale[locale];
 			if (!localized) continue;
-			beer.content[locale] = toContent(slug, locale, localized, recipe);
+			beer.content[locale] = toContent(slug, locale, localized, recipe, computed, images);
 		}
 
 		// Skip recipes that have no localized content at all.

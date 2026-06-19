@@ -56,9 +56,9 @@ malts:
 meta:
   brewed: 2025-01-17
   images:
-    - belgisk-tripel-2025-1.jpg
-    - belgisk-tripel-2025-2.jpg
-    - belgisk-tripel-2025-3.jpg
+    - photos/belgisk-tripel-2025-1.jpg
+    - photos/belgisk-tripel-2025-2.jpg
+    - photos/belgisk-tripel-2025-3.jpg
   status: archived
 additions:
   - name: Light candi sugar

@@ -47,8 +47,8 @@ export const EBC_COLORS: ReadonlyArray<{ ebc: number; hex: string }> = [
 	{ ebc: 79, hex: '#36080A' }
 ];
 
-/** Returns the hex colour for the EBC entry closest to the given value. */
-export function ebcColor(ebc: number): string {
+/** Returns the EBC entry closest to the given EBC value. */
+export function closestEbcEntry(ebc: number): { ebc: number; hex: string } {
 	let closest = EBC_COLORS[0];
 	let smallestDiff = Math.abs(ebc - closest.ebc);
 	for (const entry of EBC_COLORS) {
@@ -58,5 +58,10 @@ export function ebcColor(ebc: number): string {
 			closest = entry;
 		}
 	}
-	return closest.hex;
+	return closest;
+}
+
+/** Returns the hex colour for the EBC entry closest to the given value. */
+export function ebcColor(ebc: number): string {
+	return closestEbcEntry(ebc).hex;
 }

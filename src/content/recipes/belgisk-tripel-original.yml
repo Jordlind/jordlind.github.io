@@ -51,8 +51,6 @@ malts:
     expectedSharePercent: 4
 meta:
   brewed: null
-  images:
-    - amber-beer.svg
   status: archived
 additions:
   - name: Belgian light candi sugar

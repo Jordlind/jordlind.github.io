@@ -67,7 +67,7 @@ malts:
 meta:
   brewed: 2025-03-03
   images:
-    - havre-stout.jpg
+    - photos/havre-stout.jpg
   status: archived
 additions:
   - name: Protofloc

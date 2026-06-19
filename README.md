@@ -87,10 +87,12 @@ from it and shared by both language pages.
 - Shared metadata (`brewed`, `images`/`image`, `status`) also belongs in
   canonical recipe YAML (`meta:`), not per-language markdown.
 - Use `images:` for a list of photos (a left/right carousel appears automatically
-  when there's more than one). A single `image:` value also works. Placeholder
-  art is available: `light-beer.svg`, `amber-beer.svg`, `dark-beer.svg` and
-  `beer-bottle.svg`.
-- Put image files in `static/beers/` and reference them by filename.
+  when there's more than one). A single `image:` value also works.
+- Put explicit beer photos in `static/beers/photos/` and reference them like
+  `photos/my-beer.jpg` in `meta.images`.
+- Placeholder art is automatic when `meta.images` is empty/missing: the site
+  picks `static/beers/placeholders/placeholder-ebc-<bucket>.svg` from the beer's
+  computed EBC (or `placeholders/beer-bottle.svg` if no EBC is available).
 - `status:` controls lifecycle badges/sections (`available`, `planned`, `archived`, `none`).
 
 ### Edit the About page

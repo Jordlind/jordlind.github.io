@@ -51,8 +51,6 @@ malts:
     expectedSharePercent: 4
 meta:
   brewed: 2026-06-14
-  images:
-    - amber-beer.svg
   status: available
 additions:
   - name: Dark candi sugar

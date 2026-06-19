@@ -68,6 +68,4 @@ fermentation:
   readyWeeks: 5
 yeast: Whitelabs WLP820 Oktoberfest
 meta:
-  images:
-    - amber-beer.svg
   status: planned
