@@ -120,12 +120,6 @@
 			<RecipeBuilder t={$t} bind:recipe {enabled} />
 		</div>
 
-		<ResultsDashboard
-			t={$t}
-			{metrics}
-			{enabled}
-			useOgForIbu={recipe.useOgForIbu}
-			{numberFormatter}
-		/>
+		<ResultsDashboard t={$t} {metrics} {enabled} {numberFormatter} />
 	</div>
 </section>

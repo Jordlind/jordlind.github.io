@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import Tooltip from '$lib/components/ui/Tooltip.svelte';
 	import { estimateGravity, type BuilderRecipe, type MetricId } from '$lib/calculators/recipe';
 
 	let {
@@ -15,17 +16,15 @@
 	// Which input sections are relevant for the currently enabled results.
 	const showMalts = $derived(enabled.color || enabled.abv);
 	const showHops = $derived(enabled.ibu);
-	const needOg = $derived(enabled.abv || (enabled.ibu && recipe.useOgForIbu));
 	const showGravity = $derived(enabled.abv || enabled.ibu);
 	const showPriming = $derived(enabled.priming);
 
-	let showEstimator = $state(false);
 	const estimate = $derived(estimateGravity(recipe));
 
-	function applyEstimate() {
-		recipe.og = Number(estimate.og.toFixed(3));
-		recipe.fg = Number(estimate.fg.toFixed(3));
-	}
+	const inputClass =
+		'w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none';
+	const smallInputClass =
+		'w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none';
 
 	function addMalt() {
 		const nextId = recipe.malts.length > 0 ? Math.max(...recipe.malts.map((m) => m.id)) + 1 : 1;
@@ -52,19 +51,38 @@
 </script>
 
 <div class="space-y-8">
-	<!-- Batch -->
+	<!-- Water -->
 	<section>
-		<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.batch')}</h3>
-		<div class="mt-3 max-w-xs">
+		<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.water')}</h3>
+		<p class="mt-1 text-sm text-roast-soft">{t('calc.water.intro')}</p>
+		<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<label class="block">
-				<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.volume')}</span>
-				<input
-					type="number"
-					min="0.1"
-					step="0.1"
-					bind:value={recipe.batchVolumeL}
-					class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-				/>
+				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+					{t('calc.water.mash')}
+					<Tooltip text={t('calc.water.mashHelp')} />
+				</span>
+				<input type="number" min="0" step="0.1" bind:value={recipe.mashWaterL} class={inputClass} />
+			</label>
+			<label class="block">
+				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+					{t('calc.water.sparge')}
+					<Tooltip text={t('calc.water.spargeHelp')} />
+				</span>
+				<input type="number" min="0" step="0.1" bind:value={recipe.spargeWaterL} class={inputClass} />
+			</label>
+			<label class="block">
+				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+					{t('calc.water.preBoil')}
+					<Tooltip text={t('calc.water.preBoilHelp')} />
+				</span>
+				<input type="number" min="0" step="0.1" bind:value={recipe.preBoilVolumeL} class={inputClass} />
+			</label>
+			<label class="block">
+				<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+					{t('calc.water.batch')}
+					<Tooltip text={t('calc.water.batchHelp')} />
+				</span>
+				<input type="number" min="0.1" step="0.1" bind:value={recipe.batchVolumeL} class={inputClass} />
 			</label>
 		</div>
 	</section>
@@ -88,32 +106,16 @@
 				{#each recipe.malts as malt (malt.id)}
 					<div class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_auto] md:items-end">
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltName')}</span>
-							<input
-								type="text"
-								bind:value={malt.name}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.fieldName')}</span>
+							<input type="text" bind:value={malt.name} class={smallInputClass} />
 						</label>
 						<label class="block">
 							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltWeight')}</span>
-							<input
-								type="number"
-								min="0"
-								step="0.01"
-								bind:value={malt.weightKg}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<input type="number" min="0" step="0.01" bind:value={malt.weightKg} class={smallInputClass} />
 						</label>
 						<label class="block">
 							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltColor')}</span>
-							<input
-								type="number"
-								min="0"
-								step="1"
-								bind:value={malt.colorEbc}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<input type="number" min="0" step="1" bind:value={malt.colorEbc} class={smallInputClass} />
 						</label>
 						<button
 							type="button"
@@ -150,61 +152,24 @@
 				</button>
 			</div>
 
-			<div class="mb-3 flex items-start gap-2">
-				<label class="inline-flex items-center gap-2 text-sm text-roast-soft">
-					<input type="checkbox" bind:checked={recipe.useOgForIbu} class="h-4 w-4 accent-amber-deep" />
-					{t('calc.ibu.useOg')}
-				</label>
-				<button
-					type="button"
-					title={t('calc.ibu.useOgTooltip')}
-					aria-label={t('calc.ibu.useOgTooltip')}
-					class="mt-[1px] shrink-0 text-roast-soft/60 hover:text-roast-soft focus:outline-none"
-				>
-					<Icon name="info" class="size-4" />
-				</button>
-			</div>
-
 			<div class="space-y-3">
 				{#each recipe.hops as hop (hop.id)}
 					<div class="grid gap-2 rounded-xl border border-malt/80 bg-cream/60 p-3 md:grid-cols-[1.3fr_1fr_1fr_1fr_auto] md:items-end">
 						<label class="block">
-							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.maltName')}</span>
-							<input
-								type="text"
-								bind:value={hop.name}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.fieldName')}</span>
+							<input type="text" bind:value={hop.name} class={smallInputClass} />
 						</label>
 						<label class="block">
 							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.hopAmount')}</span>
-							<input
-								type="number"
-								min="0"
-								step="0.1"
-								bind:value={hop.grams}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<input type="number" min="0" step="0.1" bind:value={hop.grams} class={smallInputClass} />
 						</label>
 						<label class="block">
 							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.alphaAcid')}</span>
-							<input
-								type="number"
-								min="0"
-								step="0.1"
-								bind:value={hop.alphaAcidPercent}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<input type="number" min="0" step="0.1" bind:value={hop.alphaAcidPercent} class={smallInputClass} />
 						</label>
 						<label class="block">
 							<span class="mb-1 block text-xs font-medium text-roast-soft">{t('calc.boilTime')}</span>
-							<input
-								type="number"
-								min="0"
-								step="1"
-								bind:value={hop.boilMinutes}
-								class="w-full rounded-lg border border-malt bg-cream px-2 py-1 text-sm focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-							/>
+							<input type="number" min="0" step="1" bind:value={hop.boilMinutes} class={smallInputClass} />
 						</label>
 						<button
 							type="button"
@@ -228,112 +193,87 @@
 			<h3 class="font-display text-xl font-semibold text-roast">{t('calc.build.section.gravity')}</h3>
 			<p class="mt-1 text-sm text-roast-soft">{t('calc.build.gravityHelp')}</p>
 
-			<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-				{#if needOg}
-					<label class="block">
-						<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.start')}</span>
-						<input
-							type="number"
-							min="1"
-							step="0.001"
-							bind:value={recipe.og}
-							class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-						/>
-					</label>
-				{/if}
-				{#if enabled.abv}
-					<label class="block">
-						<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.final')}</span>
-						<input
-							type="number"
-							min="0.99"
-							step="0.001"
-							bind:value={recipe.fg}
-							class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-						/>
-					</label>
-				{/if}
+			<div class="mt-3 inline-flex rounded-lg border border-malt bg-cream p-1 text-sm">
+				<button
+					type="button"
+					onclick={() => (recipe.gravityMode = 'manual')}
+					class="rounded-md px-3 py-1.5 font-medium transition {recipe.gravityMode === 'manual'
+						? 'bg-amber text-roast shadow-sm'
+						: 'text-roast-soft hover:text-roast'}"
+				>
+					{t('calc.build.gravity.manual')}
+				</button>
+				<button
+					type="button"
+					onclick={() => (recipe.gravityMode = 'estimate')}
+					class="rounded-md px-3 py-1.5 font-medium transition {recipe.gravityMode === 'estimate'
+						? 'bg-amber text-roast shadow-sm'
+						: 'text-roast-soft hover:text-roast'}"
+				>
+					{t('calc.build.gravity.estimate')}
+				</button>
 			</div>
 
-			{#if enabled.abv}
-				<div class="mt-4 rounded-xl border border-malt/80 bg-cream/60 p-4">
-					<button
-						type="button"
-						onclick={() => (showEstimator = !showEstimator)}
-						class="flex w-full items-center justify-between text-left text-sm font-semibold text-roast"
-						aria-expanded={showEstimator}
-					>
-						<span>{t('calc.build.estimate.toggle')}</span>
-						<span class="text-roast-soft">{showEstimator ? '−' : '+'}</span>
-					</button>
+			{#if recipe.gravityMode === 'manual'}
+				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+					<label class="block">
+						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+							{t('calc.start')}
+							<Tooltip text={t('calc.build.ogHelp')} />
+						</span>
+						<input type="number" min="1" step="0.001" bind:value={recipe.og} class={inputClass} />
+					</label>
+					{#if enabled.abv}
+						<label class="block">
+							<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+								{t('calc.final')}
+								<Tooltip text={t('calc.build.fgHelp')} />
+							</span>
+							<input type="number" min="0.99" step="0.001" bind:value={recipe.fg} class={inputClass} />
+						</label>
+					{/if}
+				</div>
+			{:else}
+				<p class="mt-4 text-sm text-roast-soft">{t('calc.build.estimate.intro')}</p>
 
-					{#if showEstimator}
-						<p class="mt-3 text-sm text-roast-soft">{t('calc.build.estimate.intro')}</p>
+				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+					<label class="block">
+						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+							{t('calc.abv.estimate.efficiency')}
+							<Tooltip text={t('calc.build.efficiencyHelp')} />
+						</span>
+						<input type="number" min="40" max="100" step="1" bind:value={recipe.efficiencyPercent} class={inputClass} />
+					</label>
+					<label class="block">
+						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+							{t('calc.abv.estimate.attenuation')}
+							<Tooltip text={t('calc.build.attenuationHelp')} />
+						</span>
+						<input type="number" min="50" max="100" step="1" bind:value={recipe.yeastAttenuationPercent} class={inputClass} />
+					</label>
+					<label class="block">
+						<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
+							{t('calc.abv.estimate.mashTemp')}
+							<Tooltip text={t('calc.build.mashTempHelp')} />
+						</span>
+						<input type="number" min="60" max="72" step="0.5" bind:value={recipe.mashTempC} class={inputClass} />
+					</label>
+				</div>
 
-						<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-							<label class="block">
-								<span class="mb-1 flex items-center gap-1 text-sm font-medium text-roast-soft">
-									{t('calc.abv.estimate.efficiency')}
-									<button
-										type="button"
-										title={t('calc.build.efficiencyHelp')}
-										aria-label={t('calc.build.efficiencyHelp')}
-										class="text-roast-soft/60 hover:text-roast-soft focus:outline-none"
-									>
-										<Icon name="info" class="size-4" />
-									</button>
-								</span>
-								<input
-									type="number"
-									min="40"
-									max="100"
-									step="1"
-									bind:value={recipe.efficiencyPercent}
-									class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-								/>
-							</label>
-							<label class="block">
-								<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.abv.estimate.attenuation')}</span>
-								<input
-									type="number"
-									min="50"
-									max="100"
-									step="1"
-									bind:value={recipe.yeastAttenuationPercent}
-									class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-								/>
-							</label>
-							<label class="block">
-								<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.abv.estimate.mashTemp')}</span>
-								<input
-									type="number"
-									min="60"
-									max="72"
-									step="0.5"
-									bind:value={recipe.mashTempC}
-									class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-								/>
-							</label>
-						</div>
+				<p class="mt-2 text-xs text-roast-soft/70">{t('calc.build.potentialHelp')}</p>
 
-						<p class="mt-2 text-xs text-roast-soft/70">{t('calc.build.potentialHelp')}</p>
-
-						<div class="mt-4 flex flex-wrap items-center gap-4">
-							<div class="text-sm">
-								<span class="block text-roast-soft/70">{t('calc.abv.estimate.estimatedOg')}</span>
-								<span class="font-display text-xl font-semibold text-amber-deep">{estimate.og.toFixed(3)}</span>
-							</div>
-							<div class="text-sm">
-								<span class="block text-roast-soft/70">{t('calc.abv.estimate.estimatedFg')}</span>
-								<span class="font-display text-xl font-semibold text-amber-deep">{estimate.fg.toFixed(3)}</span>
-							</div>
-							<button
-								type="button"
-								onclick={applyEstimate}
-								class="ml-auto rounded-full border border-amber px-4 py-2 text-sm font-semibold text-amber-deep transition hover:bg-amber hover:text-roast"
-							>
-								{t('calc.build.estimate.apply')}
-							</button>
+				<div class="mt-4 flex flex-wrap items-center gap-6 rounded-xl border border-malt/80 bg-cream/60 px-4 py-3">
+					<div class="text-sm">
+						<span class="flex items-center gap-1 text-roast-soft/70">
+							{t('calc.abv.estimate.estimatedOg')}
+							<Tooltip text={t('calc.build.estimatedHelp')} />
+						</span>
+						<span class="font-display text-xl font-semibold text-amber-deep">{estimate.og.toFixed(3)}</span>
+					</div>
+					{#if enabled.abv}
+						<div class="text-sm">
+							<span class="block text-roast-soft/70">{t('calc.abv.estimate.estimatedFg')}</span>
+							<span class="font-display text-xl font-semibold text-amber-deep">{estimate.fg.toFixed(3)}</span>
 						</div>
 					{/if}
 				</div>
@@ -348,30 +288,15 @@
 			<div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.temp')}</span>
-					<input
-						type="number"
-						min="0"
-						step="0.1"
-						bind:value={recipe.primingTempC}
-						class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-					/>
+					<input type="number" min="0" step="0.1" bind:value={recipe.primingTempC} class={inputClass} />
 				</label>
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.targetCo2')}</span>
-					<input
-						type="number"
-						min="0"
-						step="0.1"
-						bind:value={recipe.targetCo2Vol}
-						class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-					/>
+					<input type="number" min="0" step="0.1" bind:value={recipe.targetCo2Vol} class={inputClass} />
 				</label>
 				<label class="block">
 					<span class="mb-1 block text-sm font-medium text-roast-soft">{t('calc.sugarType')}</span>
-					<select
-						bind:value={recipe.sugarType}
-						class="w-full rounded-lg border border-malt bg-cream px-3 py-2 text-roast focus:border-amber focus:ring-2 focus:ring-amber/40 focus:outline-none"
-					>
+					<select bind:value={recipe.sugarType} class={inputClass}>
 						<option value="dextrose">{t('calc.sugar.dextrose')}</option>
 						<option value="sucrose">{t('calc.sugar.sucrose')}</option>
 						<option value="dme">{t('calc.sugar.dme')}</option>

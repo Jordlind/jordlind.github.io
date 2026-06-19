@@ -6,13 +6,11 @@
 		t,
 		metrics,
 		enabled,
-		useOgForIbu,
 		numberFormatter
 	}: {
 		t: (key: string) => string;
 		metrics: RecipeMetrics;
 		enabled: Record<MetricId, boolean>;
-		useOgForIbu: boolean;
 		numberFormatter: Intl.NumberFormat;
 	} = $props();
 
@@ -41,7 +39,7 @@
 		<div class="rounded-2xl border border-malt bg-malt/40 p-6">
 			<p class="text-xs font-semibold tracking-wide text-roast-soft uppercase">{t('calc.totalIbu')}</p>
 			<p class="mt-1 font-display text-4xl font-bold text-amber-deep">{numberFormatter.format(metrics.ibu)}</p>
-			<p class="mt-3 text-xs text-roast-soft/70">{useOgForIbu ? t('calc.formulaIbu') : t('calc.formulaIbuNoOg')}</p>
+			<p class="mt-3 text-xs text-roast-soft/70">{t('calc.formulaIbu')}</p>
 		</div>
 	{/if}
 

@@ -137,6 +137,7 @@ export const translations: Record<Locale, Dict> = {
 		'calc.addedCo2': 'Tillsatt CO2',
 		'calc.grainBill': 'Maltnota',
 		'calc.addMalt': 'Lägg till malt',
+		'calc.fieldName': 'Namn',
 		'calc.maltName': 'Malt',
 		'calc.maltWeight': 'Vikt (kg)',
 		'calc.maltColor': 'Färg (EBC)',
@@ -212,6 +213,33 @@ export const translations: Record<Locale, Dict> = {
 			'Brygghuseffektivitet är hur stor andel av maltens tillgängliga socker som faktiskt hamnar i din vört. Påverkas av krossning, mäskning och lakning. Hembryggare ligger oftast på 65–80 %. Högre effektivitet ger högre OG och mer alkohol.',
 		'calc.build.potentialHelp':
 			'Potential = hur mycket socker en malt kan ge per kg per liter vid 100 % effektivitet (basmalt ≈ 300, socker ≈ 385). Du behöver inte ange det själv – det sätts automatiskt per malttyp.',
+		'calc.build.section.water': 'Vatten & volymer',
+		'calc.water.intro':
+			'Volymerna minskar genom bryggdagen – av lakvattnet kokar en del bort, och lite öl blir kvar i bottensatsen. Det är den färdiga satsvolymen som ABV, IBU, färg och priming räknas på.',
+		'calc.water.mash': 'Mäskvatten (L)',
+		'calc.water.mashHelp':
+			'Vattnet du mäskar i tillsammans med malten. En vanlig tumregel är 2,5–3 L per kg malt.',
+		'calc.water.sparge': 'Lakvatten (L)',
+		'calc.water.spargeHelp':
+			'Det extra vattnet du sköljer masken med för att få ut resten av sockret. Mäskvatten + lakvatten ger ungefär kokvolymen.',
+		'calc.water.preBoil': 'Kokvolym, före kok (L)',
+		'calc.water.preBoilHelp':
+			'Hur mycket vört du har i grytan när koket börjar. Under koket avdunstar ungefär 3–4 L per timme.',
+		'calc.water.batch': 'Färdig satsvolym (L)',
+		'calc.water.batchHelp':
+			'Den färdiga ölvolymen som går på jäskärl/flaska. Det är detta värde som alla beräkningar (ABV, IBU, färg och priming) utgår ifrån.',
+		'calc.build.gravity.manual': 'Manuell',
+		'calc.build.gravity.estimate': 'Estimera',
+		'calc.build.ogHelp':
+			'OG (original gravity) är vörtens densitet före jäsning. Högre OG betyder mer socker och mer potentiell alkohol. Skriv i SG-format, t.ex. 1.058.',
+		'calc.build.fgHelp':
+			'FG (final gravity) är densiteten när jäsningen är klar. Skillnaden mellan OG och FG avgör alkoholhalten. Skriv i SG-format, t.ex. 1.012.',
+		'calc.build.attenuationHelp':
+			'Utjäsningsgrad är hur stor andel av sockret jästen omvandlar till alkohol. Står oftast på jästförpackningen (t.ex. 78 % för US-05). Högre värde ger torrare öl och lägre FG.',
+		'calc.build.mashTempHelp':
+			'Mäsktemperaturen styr vilka sockerarter som bildas. Lägre temp (62–65 °C) ger torrare, mer utjäst öl; högre temp (68–70 °C) ger fylligare öl med högre FG. 67 °C är en neutral mittpunkt.',
+		'calc.build.estimatedHelp':
+			'De här värdena räknas fram automatiskt från maltnotan, effektiviteten, utjäsningsgraden och mäsktemperaturen. Justera fälten ovan så uppdateras OG och FG direkt.',
 
 		'footer.rights': 'Bryggt med kärlek. Drick ansvarsfullt.'
 	},
@@ -346,6 +374,7 @@ export const translations: Record<Locale, Dict> = {
 		'calc.addedCo2': 'Added CO2',
 		'calc.grainBill': 'Grain Bill',
 		'calc.addMalt': 'Add Malt',
+		'calc.fieldName': 'Name',
 		'calc.maltName': 'Malt',
 		'calc.maltWeight': 'Weight (kg)',
 		'calc.maltColor': 'Colour (EBC)',
@@ -421,6 +450,33 @@ export const translations: Record<Locale, Dict> = {
 			'Brewhouse efficiency is the share of a malt’s available sugar that actually ends up in your wort. It depends on milling, mashing and sparging. Homebrewers are usually at 65–80 %. Higher efficiency gives a higher OG and more alcohol.',
 		'calc.build.potentialHelp':
 			'Potential = how much sugar a malt can give per kg per litre at 100 % efficiency (base malt ≈ 300, sugar ≈ 385). You don’t need to enter it — it is set automatically per malt type.',
+		'calc.build.section.water': 'Water & volumes',
+		'calc.water.intro':
+			'Volumes shrink through the brew day — some sparge water boils off, and a little beer is left in the trub. ABV, IBU, colour and priming are all based on the final batch volume.',
+		'calc.water.mash': 'Mash water (L)',
+		'calc.water.mashHelp':
+			'The water you mash in with the grain. A common rule of thumb is 2.5–3 L per kg of malt.',
+		'calc.water.sparge': 'Sparge water (L)',
+		'calc.water.spargeHelp':
+			'The extra water you rinse the grain bed with to wash out the remaining sugar. Mash water + sparge water roughly equals the pre-boil volume.',
+		'calc.water.preBoil': 'Pre-boil volume (L)',
+		'calc.water.preBoilHelp':
+			'How much wort is in the kettle when the boil starts. About 3–4 L per hour evaporates during the boil.',
+		'calc.water.batch': 'Final batch volume (L)',
+		'calc.water.batchHelp':
+			'The finished beer volume going into the fermenter/bottles. This is the value every calculation (ABV, IBU, colour and priming) is based on.',
+		'calc.build.gravity.manual': 'Manual',
+		'calc.build.gravity.estimate': 'Estimate',
+		'calc.build.ogHelp':
+			'OG (original gravity) is the wort density before fermentation. A higher OG means more sugar and more potential alcohol. Enter it in SG format, e.g. 1.058.',
+		'calc.build.fgHelp':
+			'FG (final gravity) is the density once fermentation is done. The gap between OG and FG determines the alcohol content. Enter it in SG format, e.g. 1.012.',
+		'calc.build.attenuationHelp':
+			'Attenuation is the share of sugar the yeast turns into alcohol. It is usually printed on the yeast pack (e.g. 78 % for US-05). A higher value gives a drier beer and a lower FG.',
+		'calc.build.mashTempHelp':
+			'Mash temperature controls which sugars form. Lower temps (62–65 °C) give a drier, more fermentable beer; higher temps (68–70 °C) give a fuller body with a higher FG. 67 °C is a neutral midpoint.',
+		'calc.build.estimatedHelp':
+			'These values are calculated automatically from the grain bill, efficiency, attenuation and mash temperature. Adjust the fields above and the OG and FG update instantly.',
 
 		'footer.rights': 'Brewed with love. Please drink responsibly.'
 	}

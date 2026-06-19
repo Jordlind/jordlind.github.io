@@ -4,7 +4,6 @@ import {
 	colorFromMalts,
 	estimateRecipeAbv,
 	ibuForAddition,
-	ibuForAdditionNoGravity,
 	primingSugarGrams,
 	type Fermentable,
 	type FermentableType,
@@ -17,6 +16,9 @@ import type { BeerRecipeData } from '$lib/types';
 /** The four values the recipe builder can compute. */
 export type MetricId = 'abv' | 'ibu' | 'color' | 'priming';
 export const METRIC_IDS: MetricId[] = ['abv', 'ibu', 'color', 'priming'];
+
+/** How OG/FG are provided: typed in manually or estimated from the grain bill. */
+export type GravityMode = 'manual' | 'estimate';
 
 export type BuilderMalt = { id: number; name: string; weightKg: number; colorEbc: number };
 export type BuilderHop = {
@@ -33,10 +35,13 @@ export type BuilderHop = {
  * parameters (efficiency, yeast attenuation, priming settings).
  */
 export interface BuilderRecipe {
+	mashWaterL: number;
+	spargeWaterL: number;
+	preBoilVolumeL: number;
 	batchVolumeL: number;
+	gravityMode: GravityMode;
 	og: number;
 	fg: number;
-	useOgForIbu: boolean;
 	mashTempC: number;
 	efficiencyPercent: number;
 	yeastAttenuationPercent: number;
@@ -57,10 +62,13 @@ export interface RecipeMetrics {
 
 export function createDefaultRecipe(): BuilderRecipe {
 	return {
+		mashWaterL: 16,
+		spargeWaterL: 12,
+		preBoilVolumeL: 27,
 		batchVolumeL: 20,
+		gravityMode: 'manual',
 		og: 1.058,
 		fg: 1.012,
-		useOgForIbu: true,
 		mashTempC: 67,
 		efficiencyPercent: 75,
 		yeastAttenuationPercent: 78,
@@ -113,22 +121,29 @@ function toHopAdditions(hops: BuilderHop[]): HopAddition[] {
 	}));
 }
 
+/**
+ * The OG/FG actually used by the calculations: the manual values, or the
+ * estimated ones when the recipe is in estimate mode. The two are kept
+ * independent so switching mode never overwrites the other set of values.
+ */
+export function effectiveGravity(recipe: BuilderRecipe): { og: number; fg: number } {
+	if (recipe.gravityMode === 'estimate') {
+		const est = estimateGravity(recipe);
+		return { og: est.og, fg: est.fg };
+	}
+	return { og: recipe.og, fg: recipe.fg };
+}
+
 export function computeRecipeMetrics(recipe: BuilderRecipe): RecipeMetrics {
 	const volume = recipe.batchVolumeL;
+	const { og, fg } = effectiveGravity(recipe);
 	const hops = toHopAdditions(recipe.hops);
 
-	const ibu = hops.reduce(
-		(sum, hop) =>
-			sum +
-			(recipe.useOgForIbu
-				? ibuForAddition(hop, recipe.og, volume)
-				: ibuForAdditionNoGravity(hop, volume)),
-		0
-	);
+	const ibu = hops.reduce((sum, hop) => sum + ibuForAddition(hop, og, volume), 0);
 
 	return {
-		abv: abvFromOgFg(recipe.og, recipe.fg),
-		attenuation: apparentAttenuation(recipe.og, recipe.fg),
+		abv: abvFromOgFg(og, fg),
+		attenuation: apparentAttenuation(og, fg),
 		ibu,
 		color: colorFromMalts(toMaltAdditions(recipe.malts), volume),
 		priming: primingSugarGrams({
@@ -194,9 +209,17 @@ export function recipeFromBeerData(data: BeerRecipeData): BuilderRecipe {
 
 	const grainBill = [...malts, ...sugarRows];
 
+	const mashWaterL = data.water.mashWaterL ?? base.mashWaterL;
+	const preBoilVolumeL = data.water.preBoilVolumeL ?? base.preBoilVolumeL;
+	const spargeWaterL = Math.max(0, Number((preBoilVolumeL - mashWaterL).toFixed(1)));
+
 	return {
 		...base,
+		mashWaterL,
+		spargeWaterL: spargeWaterL > 0 ? spargeWaterL : base.spargeWaterL,
+		preBoilVolumeL,
 		batchVolumeL: data.water.batchVolumeL,
+		gravityMode: 'manual',
 		og: gravityToSg(data.og),
 		fg: gravityToSg(data.fg),
 		mashTempC: data.mash?.tempC ?? base.mashTempC,
